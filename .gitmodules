@@ -1,0 +1,21 @@
+[submodule "ap-common"]
+	path = ap-common
+	url = https://github.com/thelenorith/ap-common.git
+[submodule "ap-move-lights"]
+	path = ap-move-lights
+	url = https://github.com/thelenorith/ap-move-lights.git
+[submodule "ap-fits-headers"]
+	path = ap-fits-headers
+	url = https://github.com/thelenorith/ap-fits-headers.git
+[submodule "ap-cull-lights"]
+	path = ap-cull-lights
+	url = https://github.com/thelenorith/ap-cull-lights.git
+[submodule "ap-master-calibration"]
+	path = ap-master-calibration
+	url = https://github.com/thelenorith/ap-master-calibration.git
+[submodule "ap-move-calibration"]
+	path = ap-move-calibration
+	url = https://github.com/thelenorith/ap-move-calibration.git
+[submodule "legacy/brave-new-world"]
+	path = legacy/brave-new-world
+	url = https://github.com/thelenorith/brave-new-world.git
