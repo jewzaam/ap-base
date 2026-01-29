@@ -20,7 +20,8 @@ ap-base/
 ├── ap-move-lights/      # Light frame organization
 ├── legacy/
 │   └── brave-new-world/ # Legacy codebase for reference
-├── pending/             # Pending changes for each submodule
+├── patches/             # Git patches for each submodule
+├── Makefile             # Patch application workflow
 ├── CLAUDE.md            # This file (workflow instructions)
 └── .gitmodules          # Submodule configuration
 ```
@@ -37,35 +38,59 @@ ap-base/
 
 Claude Code sessions are scoped to a single repository for git push access. When working from `ap-base`, changes can be analyzed and prepared for submodules, but cannot be pushed directly to them.
 
-### Recommended Workflow
+### Patch-Based Workflow
 
-1. **Analysis session (ap-base)**: Analyze consistency issues across submodules, document needed changes in `pending/<submodule>.md`
+Changes for submodules are stored as git patches in `patches/`. This allows:
+- Precise, reviewable diffs
+- Automated application via Makefile
+- Local execution bypasses session limitations
 
-2. **Execution session (target repo)**: Open a new session pointed at the specific submodule repo, reference the pending file from ap-base, implement and push changes
-
-3. **Cleanup**: After changes are merged, update or remove the corresponding pending file
-
-### Pending Directory Structure
-
-The `pending/` directory contains one markdown file per submodule with documented changes needed:
+### Patches Directory
 
 ```
-pending/
-├── ap-common.md
-├── ap-cull-lights.md
-├── ap-fits-headers.md
-├── ap-master-calibration.md
-├── ap-move-calibration.md
-└── ap-move-lights.md
+patches/
+├── ap-common.patch         # Makefile standardization
+├── ap-cull-lights.patch    # Add LICENSE
+├── ap-fits-headers.patch   # Add LICENSE
+└── ap-move-calibration.patch  # Add README.md, MANIFEST.in
 ```
 
-Each file contains:
-- Issues/changes needed for that submodule
-- Current state vs desired state
-- Rationale for changes
-- Priority/status of each item
+### Applying Patches
 
-When working in a submodule session, read the corresponding `pending/<submodule>.md` file from ap-base for context on what needs to be done.
+Run locally to apply all patches, create branches, and push:
+
+```bash
+# Initialize submodules
+make init
+
+# Check which patches exist
+make status
+
+# Apply all patches (creates branches, does not push)
+make apply-patches
+
+# Push all branches to origin
+make push-patches
+
+# Or do both for a specific submodule
+make apply-patch-ap-common
+make push-patch-ap-common
+
+# Reset all submodules to main
+make clean-patches
+```
+
+### Creating New Patches
+
+To create a patch for a submodule:
+
+```bash
+cd <submodule>
+# Make changes...
+git diff > ../patches/<submodule>.patch
+# Or for new files:
+git add -A && git diff --cached > ../patches/<submodule>.patch && git reset HEAD
+```
 
 ### Creating Cross-Repo Issues
 
