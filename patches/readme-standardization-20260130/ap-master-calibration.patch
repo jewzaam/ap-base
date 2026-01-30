@@ -1,32 +1,26 @@
 diff --git a/README.md b/README.md
-index cfa70a6..standardized 100644
+index 1234567..abcdefg 100644
 --- a/README.md
 +++ b/README.md
-@@ -1,4 +1,13 @@
+@@ -1,6 +1,14 @@
 -# Master Calibration Frame Automation
 +# ap-master-calibration
-+
+
+-Automated generation of master bias, dark, and flat calibration frames for PixInsight.
 +[![Test](https://github.com/jewzaam/ap-master-calibration/workflows/Test/badge.svg)](https://github.com/jewzaam/ap-master-calibration/actions/workflows/test.yml)
 +[![Coverage](https://github.com/jewzaam/ap-master-calibration/workflows/Coverage%20Check/badge.svg)](https://github.com/jewzaam/ap-master-calibration/actions/workflows/coverage.yml)
 +[![Lint](https://github.com/jewzaam/ap-master-calibration/workflows/Lint/badge.svg)](https://github.com/jewzaam/ap-master-calibration/actions/workflows/lint.yml)
 +[![Format](https://github.com/jewzaam/ap-master-calibration/workflows/Format%20Check/badge.svg)](https://github.com/jewzaam/ap-master-calibration/actions/workflows/format.yml)
 +[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 +[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-
- Automated generation of master bias, dark, and flat calibration frames for PixInsight.
-
-@@ -9,6 +18,14 @@ Automated generation of master bias, dark, and flat calibration frames for PixIn
- - Calibrates flats with bias/dark masters using ImageCalibration with dark optimization
- - Runs completely hands-off from the command line
-
-+## Documentation
 +
-+This tool is part of the astrophotography pipeline. For comprehensive documentation including workflow guides and integration with other tools, see:
-+
-+- **[Pipeline Overview](https://github.com/jewzaam/ap-base/blob/main/docs/index.md)** - Full pipeline documentation
-+- **[Workflow Guide](https://github.com/jewzaam/ap-base/blob/main/docs/workflow.md)** - Detailed workflow with diagrams
-+- **[ap-master-calibration Reference](https://github.com/jewzaam/ap-base/blob/main/docs/tools/ap-master-calibration.md)** - Detailed reference for this tool
-+
- ## Installation
++Automated generation of master bias, dark, and flat calibration frames for PixInsight.
 
- ```bash
+ ## What It Does
+
+@@ -179,4 +187,4 @@ ruff check ap_master_calibration/ tests/
+
+ ## License
+
+-See LICENSE file for details.
++Apache-2.0
