@@ -8,6 +8,7 @@ Standard directory layout for ap-* Python projects.
 ap-<name>/
 ├── ap_<name>/              # Package directory (underscores)
 │   ├── __init__.py
+│   ├── __main__.py         # Entry point for python -m
 │   └── <module>.py
 ├── tests/
 │   ├── __init__.py
