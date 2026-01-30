@@ -60,7 +60,7 @@ parser.add_argument("--filter", type=str,
 
 - Start with lowercase
 - No period at end
-- Be concise
+- Keep under 60 characters
 
 ```python
 # Correct
@@ -69,7 +69,7 @@ help="source directory containing FITS files"
 
 # Incorrect
 help="Enable debug output."  # No capital, no period
-help="This is the source directory where your FITS files are located"  # Too verbose
+help="This is the source directory where your FITS files are located"  # 61 chars
 ```
 
 ## Variable Names
