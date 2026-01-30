@@ -25,7 +25,6 @@ ap-{verb}-{qualifier?}-{noun}-to-{destination?}
 |------|--------|
 | `create` | Generate (masters from raw frames) |
 | `cull` | Filter/reject based on quality metrics |
-| `calibrate` | Apply calibration frames to lights |
 | `preserve` | Save metadata (e.g., path → header) |
 | `move` | Transfer from one location to another |
 | `delete` | Remove files/frames |
@@ -63,7 +62,6 @@ ap-{verb}-{qualifier?}-{noun}-to-{destination?}
 | `ap-create-master` | verb-noun | Create masters from raw calibration |
 | `ap-move-master-to-library` | verb-noun-to-dest | Move masters → library |
 | `ap-move-master-to-blink` | verb-noun-to-dest | Copy matching masters from library → blink |
-| `ap-calibrate-light` | verb-noun | Apply masters to lights |
 | `ap-move-light-to-data` | verb-noun-to-dest | Move accepted lights from blink → data |
 | `ap-common` | — | Shared utilities (exception to pattern) |
 
@@ -79,7 +77,6 @@ Python packages use underscores instead of hyphens:
 | `ap-create-master` | `ap_create_master` |
 | `ap-move-master-to-library` | `ap_move_master_to_library` |
 | `ap-move-master-to-blink` | `ap_move_master_to_blink` |
-| `ap-calibrate-light` | `ap_calibrate_light` |
 | `ap-move-light-to-data` | `ap_move_light_to_data` |
 | `ap-common` | `ap_common` |
 
