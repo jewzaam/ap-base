@@ -2,25 +2,23 @@
 
 Command-line interface conventions for ap-* tools.
 
-## Argument Style
-
-Use hyphens to separate qualifiers in compound arguments:
+## Options
 
 | Type | Example | Rule |
 |------|---------|------|
 | Single concept | `--dryrun`, `--debug` | No hyphens |
 | Qualified/compound | `--no-overwrite`, `--blink-dir` | Hyphen separates qualifier |
 
-## Standard Arguments
+## Required Options
 
 All CLI tools must support:
 
-| Argument | Type | Description |
-|----------|------|-------------|
+| Option | Type | Description |
+|--------|------|-------------|
 | `--debug` | flag | Enable debug output |
 | `--dryrun` | flag | Perform dry run without side effects |
 
-## Argument Naming
+## Option Naming
 
 | Pattern | Example | Use |
 |---------|---------|-----|
@@ -30,22 +28,19 @@ All CLI tools must support:
 
 ## Positional Arguments
 
-Source and destination directories are positional, not flags.
+Source and destination directories are positional, not options.
 
 ## Help Text
 
-- Start with lowercase
-- No period at end
-- Keep under 60 characters
+| Rule | Example |
+|------|---------|
+| Start with lowercase | `help="enable debug output"` |
+| No period at end | `help="source directory"` |
+| Under 60 characters | Keep it brief |
 
 ## Exit Codes
 
-Define as module-level constants with `EXIT_` prefix in the main module (used by `__main__.py`):
-
-```python
-EXIT_SUCCESS = 0
-EXIT_ERROR = 1
-```
+Define as module-level constants with `EXIT_` prefix:
 
 | Constant | Value | Meaning |
 |----------|-------|---------|

@@ -10,7 +10,6 @@ Standard structure for ap-* project READMEs.
 4. Overview (what it does, key features)
 5. Installation
 6. Usage (with examples)
-7. License
 
 ## Title
 
@@ -82,27 +81,18 @@ Show the command-line interface with examples:
 ## Usage
 
 \`\`\`bash
-python -m ap_<name>.<module> <args>
+python -m ap_<name>.<module> <source_dir> <dest_dir> [options]
 \`\`\`
 
 ### Options
 
-- `source_dir`: Source directory
-- `--debug`: Enable debug output
-- `--dryrun`: Preview without changes
+| Option | Description |
+|--------|-------------|
+| `--debug` | Enable debug output |
+| `--dryrun` | Preview without changes |
 ```
 
 Include 1-2 concrete examples with real-looking paths.
-
-## License
-
-Simple reference:
-
-```markdown
-## License
-
-Apache-2.0
-```
 
 ## What to Avoid
 
@@ -111,3 +101,4 @@ Apache-2.0
 - Changelog or version history
 - Contributor guidelines (use CONTRIBUTING.md if needed)
 - Duplicate information from other sections
+- License section (LICENSE file exists)
