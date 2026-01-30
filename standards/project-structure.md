@@ -40,8 +40,10 @@ ap-<name>/
 
 ## Naming Conventions
 
-- **Repository**: `ap-<name>` (hyphenated)
-- **Package directory**: `ap_<name>` (underscored)
+See [Naming](naming.md) for the full naming taxonomy and pattern.
+
+- **Repository**: `ap-{verb}-{noun}` or `ap-{verb}-{noun}-to-{dest}` (hyphenated)
+- **Package directory**: Same as repository with underscores (e.g., `ap_cull_light`)
 - **Module files**: lowercase, underscored
 - **Test files**: `test_<module>.py`
 

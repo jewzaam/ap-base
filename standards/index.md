@@ -6,6 +6,7 @@ Standards for all ap-* astrophotography pipeline projects.
 
 | Standard | Description |
 |----------|-------------|
+| [Naming](naming.md) | Project and package naming conventions |
 | [Project Structure](project-structure.md) | Directory layout and required files |
 | [README Format](readme-format.md) | README structure and content |
 | [Makefile](makefile.md) | Build targets and conventions |
