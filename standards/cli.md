@@ -40,7 +40,7 @@ Source and destination directories are positional, not flags.
 
 ## Exit Codes
 
-Define as module-level constants with `EXIT_` prefix:
+Define as module-level constants with `EXIT_` prefix in the main module (used by `__main__.py`):
 
 ```python
 EXIT_SUCCESS = 0
