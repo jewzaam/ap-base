@@ -105,6 +105,7 @@ See [standards/](standards/index.md) for detailed documentation:
 - [Makefile](standards/makefile.md) - Build targets and conventions
 - [GitHub Workflows](standards/github-workflows.md) - CI/CD configuration
 - [Testing](standards/testing.md) - Unit testing conventions
+- [CLI](standards/cli.md) - Command-line interface conventions
 
 ## Working with Submodules
 

@@ -11,6 +11,7 @@ Standards for all ap-* astrophotography pipeline projects.
 | [Makefile](makefile.md) | Build targets and conventions |
 | [GitHub Workflows](github-workflows.md) | CI/CD pipeline configuration |
 | [Testing](testing.md) | Unit testing conventions |
+| [CLI](cli.md) | Command-line interface conventions |
 
 ## Guiding Principles
 
