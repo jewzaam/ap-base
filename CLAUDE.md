@@ -20,9 +20,10 @@ ap-base/
 ├── ap-move-lights/      # Light frame organization
 ├── legacy/
 │   └── brave-new-world/ # Legacy codebase for reference
-├── patches/             # Git patches for each submodule
+├── patches/             # Git patches organized by branch name
 ├── Makefile             # Patch application workflow
 ├── CLAUDE.md            # This file (workflow instructions)
+├── PATCHING.md          # Detailed patching workflow documentation
 └── .gitmodules          # Submodule configuration
 ```
 
@@ -30,7 +31,8 @@ ap-base/
 
 - Upstream owner: `jewzaam`
 - Fork owner: `thelenorith`
-- All submodules reference the `thelenorith` forks
+- All submodules reference the upstream `jewzaam` repos
+- Patches are pushed to `thelenorith` fork branches
 
 ## Multi-Repo Workflow with Claude Sessions
 
@@ -47,58 +49,51 @@ Changes for submodules are stored as git patches in `patches/`. This allows:
 
 ### Patches Directory
 
+Patches are organized by branch name in subdirectories:
+
 ```
 patches/
-├── ap-common.patch         # Makefile standardization
-├── ap-cull-lights.patch    # Add LICENSE
-├── ap-fits-headers.patch   # Add LICENSE
-└── ap-move-calibration.patch  # Add README.md, MANIFEST.in
+├── readme-crosslinks-20260130/
+│   ├── ap-common.patch
+│   ├── ap-cull-lights.patch
+│   └── ...
+└── makefile-fixes-20260201/
+    └── ap-common.patch
 ```
 
-### Applying Patches
+Branch naming convention: `<description>-<YYYYMMDD>`
 
-Run locally to apply all patches, create branches, and push:
+### Quick Reference
 
 ```bash
-# Initialize submodules
+# Clean slate - ALWAYS start here
+make deinit
 make init
 
-# Check which patches exist
+# Check available patches
 make status
+make status BRANCH=readme-crosslinks-20260130
 
-# Apply all patches (creates branches, does not push)
-make apply-patches
+# Apply and push patches
+make apply-patches BRANCH=readme-crosslinks-20260130
+make push-patches BRANCH=readme-crosslinks-20260130
 
-# Push all branches to origin
-make push-patches
-
-# Or do both for a specific submodule
-make apply-patch-ap-common
-make push-patch-ap-common
-
-# Reset all submodules to main
+# Reset submodules
 make clean-patches
 ```
 
-### Creating New Patches
+**See [PATCHING.md](PATCHING.md) for detailed workflow documentation.**
 
-To create a patch for a submodule:
+### Creating Patches (Claude Sessions)
 
-```bash
-cd <submodule>
-# Make changes...
-git diff > ../patches/<submodule>.patch
-# Or for new files:
-git add -A && git diff --cached > ../patches/<submodule>.patch && git reset HEAD
-```
-
-### Creating Cross-Repo Issues
-
-When a session has `gh` CLI access, create issues programmatically:
+When working in a Claude session, always start with clean submodules:
 
 ```bash
-gh issue create --repo thelenorith/ap-common --title "Issue title" --body "Issue body"
+make deinit
+make init
 ```
+
+Then create patches following the workflow in [PATCHING.md](PATCHING.md).
 
 ## Consistency Standards
 
