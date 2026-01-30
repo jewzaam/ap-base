@@ -40,7 +40,14 @@ Source and destination directories are positional, not flags.
 
 ## Exit Codes
 
-| Code | Meaning |
-|------|---------|
-| 0 | Success |
-| 1 | Error |
+Define as module-level constants with `EXIT_` prefix:
+
+```python
+EXIT_SUCCESS = 0
+EXIT_ERROR = 1
+```
+
+| Constant | Value | Meaning |
+|----------|-------|---------|
+| `EXIT_SUCCESS` | 0 | Success |
+| `EXIT_ERROR` | 1 | Error |
