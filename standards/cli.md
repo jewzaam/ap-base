@@ -4,18 +4,17 @@ Command-line interface conventions for ap-* tools.
 
 ## Argument Style
 
-Use lowercase with no hyphens for flag names:
+Use hyphens to separate qualifiers in compound arguments:
 
 ```python
-# Correct
+# Single concepts - no hyphens
 parser.add_argument("--dryrun", ...)
 parser.add_argument("--debug", ...)
-parser.add_argument("--nooverwrite", ...)
 
-# Incorrect
-parser.add_argument("--dry-run", ...)   # No hyphens
-parser.add_argument("--dry_run", ...)   # No underscores
-parser.add_argument("--DryRun", ...)    # No camelCase
+# Qualified/compound - use hyphens
+parser.add_argument("--no-overwrite", ...)   # "no" qualifies "overwrite"
+parser.add_argument("--blink-dir", ...)      # "blink" qualifies "dir"
+parser.add_argument("--no-accept", ...)      # "no" qualifies "accept"
 ```
 
 ## Standard Arguments
@@ -42,20 +41,20 @@ parser.add_argument("dest_dir", type=str, help="Destination directory")
 Use `--` prefix for optional arguments:
 
 ```python
-parser.add_argument("--nooverwrite", action="store_true",
-                    help="Fail if destination files exist")
+parser.add_argument("--no-overwrite", action="store_true",
+                    help="fail if destination files exist")
 parser.add_argument("--filter", type=str,
-                    help="Filter by name")
+                    help="filter by name")
 ```
 
 ## Argument Naming
 
 | Pattern | Example | Use |
 |---------|---------|-----|
-| `--<action>` | `--debug`, `--dryrun` | Boolean flags |
-| `--no<feature>` | `--nooverwrite`, `--noaccept` | Disable default behavior |
+| `--<word>` | `--debug`, `--dryrun` | Single-concept flags |
+| `--no-<feature>` | `--no-overwrite`, `--no-accept` | Disable default behavior |
 | `--<noun>` | `--filter`, `--camera` | Value arguments |
-| `--<noun>dir` | `--blinkdir`, `--acceptdir` | Directory paths |
+| `--<qualifier>-dir` | `--blink-dir`, `--accept-dir` | Directory paths |
 
 ## Help Text
 
@@ -75,14 +74,15 @@ help="This is the source directory where your FITS files are located"  # Too ver
 
 ## Variable Names
 
-Internal variable names use snake_case to match Python conventions:
+Argparse converts hyphens to underscores for attribute access:
 
 ```python
-parser.add_argument("--dryrun", ...)  # CLI: no hyphen
-args.dryrun  # Access: matches CLI
+parser.add_argument("--dryrun", ...)        # args.dryrun
+parser.add_argument("--no-overwrite", ...)  # args.no_overwrite
+parser.add_argument("--blink-dir", ...)     # args.blink_dir
 
-# Function parameters
-def process(source_dir: str, dryrun: bool = False):
+# Function parameters use snake_case
+def process(source_dir: str, dryrun: bool = False, no_overwrite: bool = False):
     ...
 ```
 
@@ -126,8 +126,10 @@ def main():
                         help="perform dry run without copying")
 
     # Tool-specific flags
-    parser.add_argument("--nooverwrite", action="store_true",
+    parser.add_argument("--no-overwrite", action="store_true",
                         help="fail if destination files exist")
+    parser.add_argument("--blink-dir", type=str, default="10_Blink",
+                        help="directory name for blink stage")
 
     args = parser.parse_args()
 ```
