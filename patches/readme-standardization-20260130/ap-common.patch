@@ -2,11 +2,19 @@ diff --git a/README.md b/README.md
 index 1234567..abcdefg 100644
 --- a/README.md
 +++ b/README.md
-@@ -202,3 +202,7 @@ The package includes comprehensive unit tests covering all modules:
- - `test_filesystem.py` - File operation tests
- - `test_fits.py` - FITS/XISF header reading tests
- - `test_metadata.py` - Metadata extraction and filtering tests
-+
+@@ -194,12 +194,6 @@ Verify installation:
+ make --version
+ ```
+
+-## Testing
+-
+-The package includes comprehensive unit tests covering all modules:
+-- `test_utils.py` - Utility function tests
+-- `test_normalization.py` - Header normalization tests
+-- `test_filesystem.py` - File operation tests
+-- `test_fits.py` - FITS/XISF header reading tests
+-- `test_metadata.py` - Metadata extraction and filtering tests
+-
 +## License
-+
+
 +Apache-2.0
