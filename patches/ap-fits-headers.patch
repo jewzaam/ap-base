@@ -1,11 +1,24 @@
 diff --git a/README.md b/README.md
-index da291f7..b69e18a 100644
+index da291f7..standardized 100644
 --- a/README.md
 +++ b/README.md
-@@ -6,6 +6,14 @@ A simple tool for preserving FITS headers from file path key-value pairs into .f
- 
+@@ -1,5 +1,14 @@
+ # ap-fits-headers
+
++[![Test](https://github.com/jewzaam/ap-fits-headers/workflows/Test/badge.svg)](https://github.com/jewzaam/ap-fits-headers/actions/workflows/test.yml)
++[![Coverage](https://github.com/jewzaam/ap-fits-headers/workflows/Coverage%20Check/badge.svg)](https://github.com/jewzaam/ap-fits-headers/actions/workflows/coverage.yml)
++[![Lint](https://github.com/jewzaam/ap-fits-headers/workflows/Lint/badge.svg)](https://github.com/jewzaam/ap-fits-headers/actions/workflows/lint.yml)
++[![Format](https://github.com/jewzaam/ap-fits-headers/workflows/Format%20Check/badge.svg)](https://github.com/jewzaam/ap-fits-headers/actions/workflows/format.yml)
++[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
++[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
++
+ A simple tool for preserving FITS headers from file path key-value pairs into .fits and .xisf files.
+
+ ## Overview
+@@ -6,6 +15,14 @@ A simple tool for preserving FITS headers from file path key-value pairs into .f
+
  This tool extracts key-value pairs encoded in directory paths and filenames and inserts them as FITS header keywords. It only updates headers when the current value doesn't match the path value, ensuring idempotent operation.
- 
+
 +## Documentation
 +
 +This tool is part of the astrophotography pipeline. For comprehensive documentation including workflow guides and integration with other tools, see:
@@ -15,5 +28,5 @@ index da291f7..b69e18a 100644
 +- **[ap-fits-headers Reference](https://github.com/jewzaam/ap-base/blob/main/docs/tools/ap-fits-headers.md)** - Detailed reference for this tool
 +
  ## Usage
- 
+
  ```powershell

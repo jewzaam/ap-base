@@ -1,11 +1,24 @@
 diff --git a/README.md b/README.md
-index 9da4277..a18b032 100644
+index 9da4277..standardized 100644
 --- a/README.md
 +++ b/README.md
-@@ -13,6 +13,14 @@ This tool evaluates light frames against HFR and RMS thresholds and moves reject
+@@ -1,5 +1,14 @@
+ # ap-cull-lights
+
++[![Test](https://github.com/jewzaam/ap-cull-lights/workflows/Test/badge.svg)](https://github.com/jewzaam/ap-cull-lights/actions/workflows/test.yml)
++[![Coverage](https://github.com/jewzaam/ap-cull-lights/workflows/Coverage%20Check/badge.svg)](https://github.com/jewzaam/ap-cull-lights/actions/workflows/coverage.yml)
++[![Lint](https://github.com/jewzaam/ap-cull-lights/workflows/Lint/badge.svg)](https://github.com/jewzaam/ap-cull-lights/actions/workflows/lint.yml)
++[![Format](https://github.com/jewzaam/ap-cull-lights/workflows/Format%20Check/badge.svg)](https://github.com/jewzaam/ap-cull-lights/actions/workflows/format.yml)
++[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
++[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
++
+ A simple tool for culling astrophotography light frames based on HFR and RMS thresholds.
+
+ ## Overview
+@@ -13,6 +22,14 @@ This tool evaluates light frames against HFR and RMS thresholds and moves reject
  - **Auto-Accept Threshold**: Automatically accept rejections below a configurable percentage
  - **Dry Run Mode**: Test rules without actually moving files
- 
+
 +## Documentation
 +
 +This tool is part of the astrophotography pipeline. For comprehensive documentation including workflow guides and integration with other tools, see:
@@ -15,5 +28,5 @@ index 9da4277..a18b032 100644
 +- **[ap-cull-lights Reference](https://github.com/jewzaam/ap-base/blob/main/docs/tools/ap-cull-lights.md)** - Detailed reference for this tool
 +
  ## Usage
- 
+
  ### Basic Culling

@@ -1,11 +1,11 @@
 diff --git a/README.md b/README.md
-index d2a01ba..451146a 100644
+index d2a01ba..standardized 100644
 --- a/README.md
 +++ b/README.md
 @@ -19,6 +19,14 @@ This package extracts reusable functionality from astrophotography tools into a
  - **File Operations**: Move, copy, and manage files with directory creation
  - **Utility Functions**: Environment variable replacement, string conversion, file finding
- 
+
 +## Documentation
 +
 +This tool is part of the astrophotography pipeline. For comprehensive documentation including workflow guides and integration with other tools, see:
@@ -15,5 +15,13 @@ index d2a01ba..451146a 100644
 +- **[ap-common Reference](https://github.com/jewzaam/ap-base/blob/main/docs/tools/ap-common.md)** - API reference for this tool
 +
  ## Installation
- 
+
  ### Local Development (Editable Install)
+@@ -203,3 +211,7 @@ The package includes comprehensive unit tests covering all modules:
+ - `test_filesystem.py` - File operation tests
+ - `test_fits.py` - FITS/XISF header reading tests
+ - `test_metadata.py` - Metadata extraction and filtering tests
++
++## License
++
++Apache-2.0
