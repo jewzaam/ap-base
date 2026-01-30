@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
 
     steps:
       - uses: actions/checkout@v4
@@ -138,7 +138,7 @@ jobs:
 
 ### Python versions
 
-Test on Python 3.10 through 3.13. Use 3.12 for single-version jobs (lint, format, coverage).
+Test on Python 3.10 through 3.14. Use 3.12 for single-version jobs (lint, format, coverage).
 
 ### Actions versions
 
