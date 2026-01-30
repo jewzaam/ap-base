@@ -32,19 +32,19 @@ python -m ap_move_calibration <source_dir> <dest_dir> [options]
 
 ```
 {dest_dir}/
-├── BIAS/
+├── MASTER BIAS/
 │   └── {camera}/
-│       └── masterBias_GAIN_{gain}_OFFSET_{offset}_TEMP_{temp}.xisf
+│       └── masterBias_GAIN_{gain}_OFFSET_{offset}_SETTEMP_{settemp}_READOUTM_{readoutmode}.xisf
 │
-├── DARK/
+├── MASTER DARK/
 │   └── {camera}/
-│       └── masterDark_EXPTIME_{exp}_GAIN_{gain}_OFFSET_{offset}_TEMP_{temp}.xisf
+│       └── masterDark_EXPOSURE_{exposure}_GAIN_{gain}_OFFSET_{offset}_SETTEMP_{settemp}_READOUTM_{readoutmode}.xisf
 │
-└── FLAT/
+└── MASTER FLAT/
     └── {camera}/
         └── {optic}/           # Only if optic in header
             └── DATE_{YYYY-MM-DD}/
-                └── masterFlat_FILTER_{filter}_GAIN_{gain}_OFFSET_{offset}.xisf
+                └── masterFlat_FILTER_{filter}_GAIN_{gain}_OFFSET_{offset}_SETTEMP_{settemp}_FOCALLEN_{focallength}_READOUTM_{readoutmode}.xisf
 ```
 
 ## Organization Logic
@@ -54,9 +54,9 @@ flowchart TB
     FILE[Master Frame] --> READ[Read Headers]
     READ --> TYPE{Frame Type?}
 
-    TYPE -->|BIAS| BIAS_PATH["BIAS/{camera}/"]
-    TYPE -->|DARK| DARK_PATH["DARK/{camera}/"]
-    TYPE -->|FLAT| FLAT_PATH["FLAT/{camera}/{optic}/DATE_{date}/"]
+    TYPE -->|MASTER BIAS| BIAS_PATH["MASTER BIAS/{camera}/"]
+    TYPE -->|MASTER DARK| DARK_PATH["MASTER DARK/{camera}/"]
+    TYPE -->|MASTER FLAT| FLAT_PATH["MASTER FLAT/{camera}/{optic}/DATE_{date}/"]
 
     BIAS_PATH --> COPY[Copy with Metadata Filename]
     DARK_PATH --> COPY
@@ -66,17 +66,17 @@ flowchart TB
 ### Frame Type Detection
 
 Identifies master frame type from `IMAGETYP` header:
-- `MASTER BIAS` → BIAS directory
-- `MASTER DARK` → DARK directory
-- `MASTER FLAT` → FLAT directory
+- `MASTER BIAS` → MASTER BIAS directory
+- `MASTER DARK` → MASTER DARK directory
+- `MASTER FLAT` → MASTER FLAT directory
 
 ### Metadata Extraction
 
 | Frame Type | Directory Keys | Filename Keys |
 |------------|----------------|---------------|
-| BIAS | Camera | Gain, Offset, Temp, Readout |
-| DARK | Camera | Exposure, Gain, Offset, Temp, Readout |
-| FLAT | Camera, Optic, Date | Filter, Gain, Offset, Temp, Focal Length |
+| MASTER BIAS | Camera | Gain, Offset, Temp, Readout |
+| MASTER DARK | Camera | Exposure, Gain, Offset, Temp, Readout |
+| MASTER FLAT | Camera, Optic, Date | Filter, Gain, Offset, Temp, Focal Length |
 
 ## Examples
 
@@ -121,9 +121,8 @@ python -m ap_move_calibration /output/master /calibration/library
 
 The organized structure allows:
 - Quick lookup by camera and optical configuration
-- Easy identification of calibration frame age (date directories)
 - Deduplication of identical frames
-- Efficient storage across sessions
+
 
 ## Default Behavior
 

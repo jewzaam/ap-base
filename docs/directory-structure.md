@@ -23,9 +23,9 @@ flowchart TB
     end
 
     subgraph Calibration["Calibration Library"]
-        BIAS_LIB[BIAS/]
-        DARK_LIB[DARK/]
-        FLAT_LIB[FLAT/]
+        BIAS_LIB[MASTER BIAS/]
+        DARK_LIB[MASTER DARK/]
+        FLAT_LIB[MASTER FLAT/]
     end
 
     RAW_LIGHTS --> BLINK
@@ -34,6 +34,11 @@ flowchart TB
     RAW_BIAS --> BIAS_LIB
     RAW_DARK --> DARK_LIB
     RAW_FLAT --> FLAT_LIB
+
+    BIAS_LIB -.-> FLAT_LIB
+    DARK_LIB -.-> FLAT_LIB
+    FLAT_LIB -.-> BLINK
+    DARK_LIB -.-> BLINK
 ```
 
 ## Data Directory Structure
@@ -45,16 +50,25 @@ The data directory organizes light frames through a multi-stage workflow:
 └── {optic}@f{focal_ratio}+{camera}/    # Optical configuration
     ├── 10_Blink/                        # Initial QC stage
     │   └── {target}/
-    │       └── DATE_{YYYY-MM-DD}/
-    │           └── FILTER_{filter}_EXP_{exposure}/
-    │               ├── image_001.fits
-    │               ├── image_002.fits
-    │               └── accept/          # Reviewed frames
+    │       └── accept/                  # Reviewed frames
+    │           └── DATE_{YYYY-MM-DD}/
+    │               └── FILTER_{filter}_EXP_{exposure}/
+    │                   ├── image_001.fits
+    │                   ├── image_002.fits
     │                   └── ...
     ├── 20_Data/                         # Collecting more data
-    │   └── {target}/...
+    │   └── {target}/
+    │       └── accept/
+    │           └── DATE_{YYYY-MM-DD}/
+    │               └── FILTER_{filter}_EXP_{exposure}/...
     ├── 30_Master/                       # Creating masters
-    │   └── {target}/...
+    │   └── {target}/
+    │       ├── accept/
+    │       │   └── DATE_{YYYY-MM-DD}/
+    │       │       └── FILTER_{filter}_EXP_{exposure}/...
+    │       └── master/
+    │           └── DATE_{YYYY-MM-DD}/
+    │               └── FILTER_{filter}_EXP_{exposure}/...
     ├── 40_Process/                      # Active processing
     │   └── {target}/...
     ├── 50_Bake/                         # Review before publish
@@ -87,23 +101,25 @@ Example: `FILTER_L_EXP_300_PANEL_1/`
 
 ## Calibration Library Structure
 
-The calibration library organizes master frames for efficient lookup:
+The calibration library organizes master frames for efficient lookup and uniqueness, presenting critical headers in the path and filename.
+
+**Note:** FITS header keywords containing dashes (e.g., `SET-TEMP`, `DATE-OBS`) are written without dashes in filenames for filesystem compatibility (e.g., `SETTEMP`, `DATE_YYYY-MM-DD`).
 
 ```
 {calibration_library}/
-├── BIAS/
+├── MASTER BIAS/
 │   └── {camera}/
-│       └── masterBias_GAIN_{gain}_OFFSET_{offset}_TEMP_{temp}.xisf
+│       └── masterBias_GAIN_{gain}_OFFSET_{offset}_SETTEMP_{settemp}_READOUTM_{readoutmode}.xisf
 │
-├── DARK/
+├── MASTER DARK/
 │   └── {camera}/
-│       └── masterDark_EXPTIME_{exposure}_GAIN_{gain}_OFFSET_{offset}_TEMP_{temp}.xisf
+│       └── masterDark_EXPOSURE_{exposure}_GAIN_{gain}_OFFSET_{offset}_SETTEMP_{settemp}_READOUTM_{readoutmode}.xisf
 │
-└── FLAT/
+└── MASTER FLAT/
     └── {camera}/
         └── {optic}/                     # Optional - only if optic in header
             └── DATE_{YYYY-MM-DD}/
-                └── masterFlat_FILTER_{filter}_GAIN_{gain}_OFFSET_{offset}.xisf
+                └── masterFlat_FILTER_{filter}_GAIN_{gain}_OFFSET_{offset}_SETTEMP_{settemp}_FOCALLEN_{focallength}_READOUTM_{readoutmode}.xisf
 ```
 
 ### Calibration Matching
@@ -125,49 +141,32 @@ flowchart TB
 
 | Frame Type | Match Criteria | Notes |
 |------------|----------------|-------|
-| Bias | Camera, Temp, Gain, Offset, Readout | Exact match required |
+| Bias | Camera, Temp, Gain, Offset \*, Readout \* | Exact match required |
 | Dark | Above + Exposure | Lower or equal exposure preferred |
 | Flat | Above + Filter + Date | Nearest date if exact not available |
+\* if available, else ignored
 
 ## Raw Capture Structure
 
-NINA typically captures to a structure like:
+NINA captures to a structure defined by the user, set under Options --> Imaging in the "Image File Pattern" parameter.  Note that the `HFR` and `RMS` parameters are NOT captured as fits headers.  This is the value used by the author as of Jan 29, 2026:
 
 ```
-{capture_root}/
-└── {date}/
-    └── {sequence_name}/
-        └── LIGHT/
-            └── {target}/
-                └── {filter}/
-                    └── {target}_{filter}_{exposure}s_{index}.fits
+$$IMAGETYPE$$\$$TELESCOPE$$+$$CAMERA$$\$$TARGETNAME$$\DATE_$$DATEMINUS12$$\FILTER_$$FILTER$$_EXP_$$EXPOSURETIME$$_SETTEMP_$$TEMPERATURESETPOINT$$\$$DATETIME$$_HFR_$$HFR$$_RMSAC_$$RMSARCSEC$$_TEMP_$$SENSORTEMP$$
 ```
 
-The `ap-move-lights` tool reorganizes this into the data directory structure.
+NOTE: `RMSAC` is used but the "C" is probably a typo.. but it has persevered through scripts so just go with it..
+
+The `ap-move-lights` tool reorganizes this into the data directory structure.  And `ap-cull-lights` rejects outliers based on HFR and RMS values.
 
 ## Reject Directory Structure
 
-Rejected frames maintain their relative structure:
+Rejected frames maintain their relative structure.  If run _after_ `ap-move-lights` you will see the exact original structure, making it very easy to identify what is what.
 
-```
-{reject_root}/
-└── {relative_path_from_source}/
-    └── rejected_image.fits
-```
-
-This preserves context about where the rejected frame originated.
+HINT: if in a bind, you can always run `ap-move-lights` against the rejected files or any other directory with raw lights and it will reorganize it for you again!
 
 ## Environment Variables
 
-Several paths can be configured via environment variables:
-
-| Variable | Purpose | Example |
-|----------|---------|---------|
-| `AP_DATA_ROOT` | Root data directory | `D:\Astrophotography\Data` |
-| `AP_CALIBRATION_LIBRARY` | Calibration library | `D:\Calibration\Library` |
-| `AP_REJECT_DIR` | Reject directory | `D:\Astrophotography\Reject` |
-
-Tools use `ap-common.utils.replace_env_vars()` to expand these in configuration.
+The tool will expand environment variables, so you can define global env vars for your convenience.
 
 ## Example Full Structure
 
@@ -179,7 +178,7 @@ D:\Astrophotography\
 │   │   │   └── M42\
 │   │   │       └── DATE_2026-01-15\
 │   │   │           ├── FILTER_L_EXP_300\
-│   │   │           │   ├── M42_L_300s_001.fits
+│   │   │           │   ├── M42_L_300s_001_HFR_1.8_RMSAC_0.8.fits
 │   │   │           │   └── accept\
 │   │   │           └── FILTER_Ha_EXP_600\
 │   │   │               └── ...
@@ -189,25 +188,25 @@ D:\Astrophotography\
 │   │   └── 60_Done\
 │   │       └── M31\
 │   │           └── ...
-│   └── SQA55@f5.6+DWARFIII\
+│   └── SQA55@f5.6+ATR585M\
 │       └── ...
 │
 ├── Calibration\
 │   ├── Library\
-│   │   ├── BIAS\
+│   │   ├── MASTER BIAS\
 │   │   │   └── ASI294MC\
-│   │   │       └── masterBias_GAIN_100_OFFSET_10_TEMP_-10.xisf
-│   │   ├── DARK\
+│   │   │       └── masterBias_GAIN_100_OFFSET_10_SETTEMP_-10_READOUTM_HighSpeed.xisf
+│   │   ├── MASTER DARK\
 │   │   │   └── ASI294MC\
-│   │   │       ├── masterDark_EXPTIME_120_GAIN_100_OFFSET_10_TEMP_-10.xisf
-│   │   │       └── masterDark_EXPTIME_300_GAIN_100_OFFSET_10_TEMP_-10.xisf
-│   │   └── FLAT\
+│   │   │       ├── masterDark_EXPOSURE_120_GAIN_100_OFFSET_10_SETTEMP_-10_READOUTM_HighSpeed.xisf
+│   │   │       └── masterDark_EXPOSURE_300_GAIN_100_OFFSET_10_SETTEMP_-10_READOUTM_HighSpeed.xisf
+│   │   └── MASTER FLAT\
 │   │       └── ASI294MC\
 │   │           └── C8E\
 │   │               ├── DATE_2026-01-10\
-│   │               │   └── masterFlat_FILTER_L_GAIN_100_OFFSET_10.xisf
+│   │               │   └── masterFlat_FILTER_L_GAIN_100_OFFSET_10_SETTEMP_-10_FOCALLEN_2032_READOUTM_HighSpeed.xisf
 │   │               └── DATE_2026-01-15\
-│   │                   └── masterFlat_FILTER_Ha_GAIN_100_OFFSET_10.xisf
+│   │                   └── masterFlat_FILTER_Ha_GAIN_100_OFFSET_10_SETTEMP_-10_FOCALLEN_2032_READOUTM_HighSpeed.xisf
 │   └── Raw\
 │       └── ...
 │
@@ -217,5 +216,5 @@ D:\Astrophotography\
             └── M42\
                 └── DATE_2026-01-15\
                     └── FILTER_L_EXP_300\
-                        └── M42_L_300s_047.fits  # Rejected due to high RMS
+                        └── M42_L_300s_047_HFR_5.7_RMSAC_3.2.fits
 ```

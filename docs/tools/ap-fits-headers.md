@@ -90,7 +90,7 @@ Some capture setups cannot write all metadata to FITS headers. Encoding in paths
 
 ### Before Master Calibration
 
-Path metadata must be written to headers before creating master calibration frames, as PixInsight does not preserve path information:
+Missing or modified path metadata must be written to headers before creating master calibration frames, as PixInsight does not preserve path information.  If this is not done, you will have mis-matches in tools that rely on fits headers as it will either be missing or an incorrect value.
 
 ```bash
 # 1. Write path metadata to headers

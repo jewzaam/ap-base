@@ -7,7 +7,7 @@ A modular Python toolkit for processing and managing astrophotography data captu
 This pipeline provides a comprehensive workflow for processing astrophotography data from raw capture through organization, quality control, calibration frame management, and archiving. The tools are designed to work together while remaining independently useful.
 
 ```mermaid
-flowchart LR
+flowchart TB
     subgraph Capture
         NINA[NINA Capture]
     end
@@ -38,7 +38,7 @@ flowchart LR
 
 | Tool | Purpose |
 |------|---------|
-| [ap-common](tools/ap-common.md) | Shared utilities for FITS/XISF handling |
+| [ap-common](tools/ap-common.md) | Shared utilities for data handling |
 | [ap-move-lights](tools/ap-move-lights.md) | Organize light frames by metadata |
 | [ap-cull-lights](tools/ap-cull-lights.md) | Quality control filtering |
 | [ap-fits-headers](tools/ap-fits-headers.md) | Preserve path metadata in FITS headers |
@@ -65,7 +65,7 @@ The `ap-common` package is installed automatically as a dependency.
 
 ```bash
 # 1. Move light frames from raw capture to organized structure
-python -m ap_move_lights /raw/capture /data --dryrun
+python -m ap_move_lights /raw/capture /data
 
 # 2. Cull poor quality frames
 python -m ap_cull_lights /data/10_Blink /reject --max-hfr 2.5 --max-rms 2.0
@@ -74,7 +74,7 @@ python -m ap_cull_lights /data/10_Blink /reject --max-hfr 2.5 --max-rms 2.0
 python -m ap_fits_headers /data --include CAMERA OPTIC FILTER
 
 # 4. Generate master calibration frames
-python -m ap_master_calibration /calibration /output --pixinsight-binary "/path/to/PixInsight"
+python -m ap_master_calibration /raw/calibration /output --pixinsight-binary "/path/to/PixInsight"
 
 # 5. Organize calibration library
 python -m ap_move_calibration /output/master /calibration_library
