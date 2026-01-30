@@ -37,17 +37,9 @@ python -m ap_cull_lights <source_dir> <reject_dir> [options]
 
 Measures star focus quality. Higher values indicate worse focus or atmospheric conditions.
 
-- **Good**: < 2.0
-- **Acceptable**: 2.0 - 3.0
-- **Poor**: > 3.0
-
 ### RMS (Guiding Error)
 
 Measures tracking accuracy in arcseconds. Higher values indicate guiding issues.
-
-- **Good**: < 1.0"
-- **Acceptable**: 1.0" - 2.0"
-- **Poor**: > 2.0"
 
 ## Batch Processing
 
@@ -59,8 +51,10 @@ flowchart TB
     GROUP --> EVAL[Evaluate Each Group]
     EVAL --> STATS[Calculate Rejection %]
     STATS --> AUTO{Below Auto-Accept?}
-    AUTO -->|Yes| ACCEPT[Auto-accept Rejections]
-    AUTO -->|No| PROMPT[Prompt for Confirmation]
+    AUTO -->|Yes| REJECT[Reject!]
+    AUTO -->|No| PROMPT{Prompt: Reject?}
+    PROMPT -->|YES| REJECT
+    PROMPT -->|No| SKIP[Skip]
 ```
 
 ## Examples

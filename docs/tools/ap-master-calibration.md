@@ -4,7 +4,7 @@ Automated generation of master calibration frames using PixInsight.
 
 ## Overview
 
-`ap-master-calibration` discovers calibration frames, groups them by metadata, and generates master bias, dark, and flat frames using PixInsight's ImageIntegration.
+`ap-master-calibration` discovers calibration frames, groups them by metadata, and generates master bias, dark, and flat frames using PixInsight.
 
 ## Installation
 
@@ -14,7 +14,7 @@ pip install git+https://github.com/jewzaam/ap-master-calibration.git
 
 ## Requirements
 
-- Python 3.9+
+- Python 3.10+
 - PixInsight installed
 - Calibration frames with proper FITS keywords
 
@@ -60,6 +60,30 @@ flowchart TB
     end
 ```
 
+```mermaid
+flowchart TB
+    subgraph Input
+        BIAS[Bias Frames]
+        DARK[Dark Frames]
+        FLAT[Flat Frames]
+    end
+
+    subgraph Grouping
+        BIAS --> GROUP_B(Group by Camera/Temp/Gain/Offset)
+        DARK --> GROUP_D(Group by Camera/Temp/Gain/Offset/Exposure)
+        FLAT --> GROUP_F(Group by Camera/Temp/Gain/Offset/Date/Filter)
+    end
+
+    subgraph Integration
+        GROUP_B --> MASTER_B["`**Master Bias**`"]
+        GROUP_D --> MASTER_D["`**Master Dark**`"]
+        MASTER_B --> CAL_F(Calibrate Flats)
+        MASTER_D --> CAL_F
+        GROUP_F --> CAL_F
+        CAL_F --> MASTER_F["`**Master Flat**`"]
+    end
+```
+
 ### Required FITS Keywords
 
 | Keyword | Frame Types | Description |
@@ -73,6 +97,8 @@ flowchart TB
 | `EXPOSURE` | Dark, Flat | Exposure time |
 | `DATE-OBS` | Flat | Observation date |
 | `FILTER` | Flat | Filter name |
+
+NOTE: Missing keywords are ignored, but try to only have something like `READOUTM` missing..
 
 ## Output Structure
 

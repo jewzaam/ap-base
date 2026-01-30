@@ -7,11 +7,12 @@ This document describes the complete workflow for processing astrophotography da
 ```mermaid
 flowchart TB
     subgraph Stage1["Stage 1: Capture"]
-        NINA[NINA Capture] --> RAW[Raw Directory]
+        NINA[NINA Capture] --> RAW_Light[Raw Lights]
+        NINA --> RAW_Calibration[Raw Bias/Dark/Flat]
     end
 
     subgraph Stage2["Stage 2: Ingest & Quality Control"]
-        RAW --> MOVE[ap-move-lights]
+        RAW_Light --> MOVE[ap-move-lights]
         MOVE --> BLINK[10_Blink Directory]
         BLINK --> CULL[ap-cull-lights]
         CULL --> REJECT[Reject Directory]
@@ -25,7 +26,7 @@ flowchart TB
     end
 
     subgraph Stage4["Stage 4: Calibration"]
-        CAL_RAW[Raw Calibration Frames] --> MASTER[ap-master-calibration]
+        RAW_Calibration --> MASTER[ap-master-calibration]
         MASTER --> MASTERS[Master Frames]
         MASTERS --> ORGANIZE[ap-move-calibration]
         ORGANIZE --> LIBRARY[Calibration Library]
@@ -37,7 +38,7 @@ flowchart TB
         PROCESS --> ARCHIVE[60_Done Archive]
     end
 
-    LIBRARY -.->|"Used for"| PROCESS
+    LIBRARY -.->|"Used for"| ACCEPT
 ```
 
 ## Stage Details
@@ -133,7 +134,7 @@ flowchart LR
 #### 3b. Manual Blink Review
 
 Using PixInsight's Blink tool, visually inspect frames to identify:
-- Satellite trails
+
 - Cloud interference
 - Focusing issues
 - Other artifacts
@@ -162,18 +163,18 @@ flowchart TB
     end
 
     subgraph Grouping
-        BIAS --> GROUP_B[Group by Camera/Temp/Gain/Offset]
-        DARK --> GROUP_D[Group by Camera/Temp/Gain/Offset/Exposure]
-        FLAT --> GROUP_F[Group by Camera/Temp/Gain/Offset/Date/Filter]
+        BIAS --> GROUP_B(Group by Camera/Temp/Gain/Offset)
+        DARK --> GROUP_D(Group by Camera/Temp/Gain/Offset/Exposure)
+        FLAT --> GROUP_F(Group by Camera/Temp/Gain/Offset/Date/Filter)
     end
 
     subgraph Integration
-        GROUP_B --> MASTER_B[Master Bias]
-        GROUP_D --> MASTER_D[Master Dark]
-        MASTER_B --> CAL_F[Calibrate Flats]
+        GROUP_B --> MASTER_B["`**Master Bias**`"]
+        GROUP_D --> MASTER_D["`**Master Dark**`"]
+        MASTER_B --> CAL_F(Calibrate Flats)
         MASTER_D --> CAL_F
         GROUP_F --> CAL_F
-        CAL_F --> MASTER_F[Master Flat]
+        CAL_F --> MASTER_F["`**Master Flat**`"]
     end
 ```
 
@@ -195,17 +196,17 @@ The `ap-move-calibration` tool organizes master frames into a library structure:
 
 ```
 {library_dir}/
-├── BIAS/
+├── MASTER BIAS/
 │   └── {camera}/
-│       └── masterBias_GAIN_100_OFFSET_10_TEMP_-10.xisf
-├── DARK/
+│       └── masterBias_GAIN_100_OFFSET_10_SETTEMP_-10_READOUTM_HighSpeed.xisf
+├── MASTER DARK/
 │   └── {camera}/
-│       └── masterDark_EXPTIME_300_GAIN_100_OFFSET_10_TEMP_-10.xisf
-└── FLAT/
+│       └── masterDark_EXPOSURE_300_GAIN_100_OFFSET_10_SETTEMP_-10_READOUTM_HighSpeed.xisf
+└── MASTER FLAT/
     └── {camera}/
         └── {optic}/
-            └── DATE_YYYY-MM-DD/
-                └── masterFlat_FILTER_L_GAIN_100.xisf
+            └── DATE_2026-01-29/
+                └── masterFlat_FILTER_L_GAIN_100_OFFSET_10_SETTEMP_-10_FOCALLEN_2032_READOUTM_HighSpeed.xisf
 ```
 
 ### Stage 5: Processing and Archive
