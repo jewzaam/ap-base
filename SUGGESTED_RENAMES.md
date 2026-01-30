@@ -28,10 +28,13 @@
 
 | Verb | Action |
 |------|--------|
+| **create** | Generate (masters from raw frames) |
 | **cull** | Filter/reject based on quality metrics |
 | **calibrate** | Apply calibration frames to lights |
 | **preserve** | Save metadata (e.g., path → header) |
-| **create** | Generate (masters from raw frames) |
+| **move** | Transfer from one location to another |
+| **delete** | Remove files/frames |
+| **empty** | Clean up (e.g., remove empty directories) |
 
 ## Data Flow
 
