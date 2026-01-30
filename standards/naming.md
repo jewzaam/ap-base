@@ -65,21 +65,6 @@ ap-{verb}-{qualifier?}-{noun}-to-{destination?}
 | `ap-move-light-to-data` | verb-noun-to-dest | Move accepted lights from blink → data |
 | `ap-common` | — | Shared utilities (exception to pattern) |
 
-## Python Package Names
-
-Python packages use underscores instead of hyphens:
-
-| Repository | Package |
-|------------|---------|
-| `ap-move-raw-light-to-blink` | `ap_move_raw_light_to_blink` |
-| `ap-cull-light` | `ap_cull_light` |
-| `ap-preserve-header` | `ap_preserve_header` |
-| `ap-create-master` | `ap_create_master` |
-| `ap-move-master-to-library` | `ap_move_master_to_library` |
-| `ap-move-master-to-blink` | `ap_move_master_to_blink` |
-| `ap-move-light-to-data` | `ap_move_light_to_data` |
-| `ap-common` | `ap_common` |
-
 ## Guidelines
 
 1. **Start with a verb** - Every tool name begins with an action
