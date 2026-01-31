@@ -4,7 +4,6 @@
 .PHONY: init deinit install-dev links markdown-lint check help
 
 PYTHON := python
-PYTHON_SCRIPTS := $(shell $(PYTHON) -c "import sysconfig; print(sysconfig.get_path('scripts'))")
 SUBMODULES := $(shell git submodule status | awk '{print $$2}' | xargs)
 
 help:
@@ -37,8 +36,8 @@ check: links markdown-lint
 
 links: install-dev
 	@echo "Checking markdown links..."
-	"$(PYTHON_SCRIPTS)/linkchecker" --no-status --no-warnings --check-extern --ignore-url="ap-.*" *.md docs/*.md docs/tools/*.md standards/*.md .claude/skills/*.md
+	$(PYTHON) -m linkcheck --no-status --no-warnings --check-extern --ignore-url="ap-.*" *.md docs/*.md docs/tools/*.md standards/*.md .claude/skills/*.md
 
 markdown-lint: install-dev
 	@echo "Linting markdown files..."
-	"$(PYTHON_SCRIPTS)/pymarkdown" --disable-rules MD013,MD024,MD031,MD036 scan .
+	$(PYTHON) -m pymarkdown --disable-rules MD013,MD024,MD031,MD036 scan .
