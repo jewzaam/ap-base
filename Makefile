@@ -1,7 +1,7 @@
 # ap-base Makefile
 # Workflow for managing patches across submodules
 
-.PHONY: init deinit apply-patches apply-patch-% push-patches push-patch-% clean-patches status help
+.PHONY: init deinit apply-patches apply-all-patches apply-patch-% push-patches push-patch-% clean-patches status help
 .PHONY: test lint format coverage typecheck validate
 
 SUBMODULES := ap-common ap-cull-lights ap-empty-directory ap-fits-headers ap-master-calibration ap-move-calibration ap-move-lights ap-move-lights-to-data
@@ -26,9 +26,10 @@ help:
 	@echo "  status         - Show patch status for each submodule"
 	@echo ""
 	@echo "Patch management:"
-	@echo "  apply-patches  - Apply all patches for BRANCH and create branches"
-	@echo "  push-patches   - Push all branches with applied patches"
-	@echo "  clean-patches  - Reset all submodules to main branch"
+	@echo "  apply-all-patches - Apply patches from all branch directories"
+	@echo "  apply-patches     - Apply all patches for BRANCH and create branches"
+	@echo "  push-patches      - Push all branches with applied patches"
+	@echo "  clean-patches     - Reset all submodules to main branch"
 	@echo ""
 	@echo "Individual targets:"
 	@echo "  apply-patch-<submodule>  - Apply patch to specific submodule"
@@ -87,6 +88,30 @@ status:
 	else \
 		echo "Set BRANCH=<name> to see patches for a specific branch"; \
 	fi
+
+apply-all-patches: init
+	@echo "Applying patches from all branch directories..."
+	@if [ -d "patches" ]; then \
+		for dir in patches/*/; do \
+			if [ -d "$$dir" ]; then \
+				branch=$$(basename "$$dir"); \
+				echo ""; \
+				echo "=== Applying patches for $$branch ==="; \
+				for sub in $(SUBMODULES); do \
+					if [ -f "patches/$$branch/$$sub.patch" ]; then \
+						echo "Applying $$branch patch to $$sub..."; \
+						cd $$sub && \
+						git apply ../patches/$$branch/$$sub.patch && \
+						cd ..; \
+					fi; \
+				done; \
+			fi; \
+		done; \
+	else \
+		echo "No patches directory found."; \
+	fi
+	@echo ""
+	@echo "All patches applied."
 
 apply-patches: init
 	@if [ -z "$(BRANCH)" ]; then \
@@ -153,7 +178,7 @@ clean-patches:
 # Validation targets - run make targets across all submodules
 # =============================================================================
 
-test: init
+test: apply-all-patches
 	@echo "Running tests in all submodules..."
 	@for sub in $(SUBMODULES); do \
 		echo ""; \
@@ -163,7 +188,7 @@ test: init
 	@echo ""
 	@echo "All tests passed."
 
-lint: init
+lint: apply-all-patches
 	@echo "Running linter in all submodules..."
 	@for sub in $(SUBMODULES); do \
 		echo ""; \
@@ -173,7 +198,7 @@ lint: init
 	@echo ""
 	@echo "All lint checks passed."
 
-format: init
+format: apply-all-patches
 	@echo "Checking format in all submodules..."
 	@for sub in $(SUBMODULES); do \
 		echo ""; \
@@ -183,7 +208,7 @@ format: init
 	@echo ""
 	@echo "All format checks passed."
 
-coverage: init
+coverage: apply-all-patches
 	@echo "Running coverage in all submodules..."
 	@for sub in $(SUBMODULES); do \
 		echo ""; \
@@ -193,7 +218,7 @@ coverage: init
 	@echo ""
 	@echo "All coverage checks passed."
 
-typecheck: init
+typecheck: apply-all-patches
 	@echo "Running type check in all submodules..."
 	@for sub in $(SUBMODULES); do \
 		echo ""; \
