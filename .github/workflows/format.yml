@@ -9,17 +9,6 @@ on:
 jobs:
   format:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        submodule:
-          - ap-common
-          - ap-cull-lights
-          - ap-empty-directory
-          - ap-fits-headers
-          - ap-master-calibration
-          - ap-move-calibration
-          - ap-move-lights
-          - ap-move-lights-to-data
 
     steps:
       - uses: actions/checkout@v4
@@ -31,23 +20,5 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-
-      - name: Check formatting in ${{ matrix.submodule }}
-        run: |
-          cd ${{ matrix.submodule }}
-          make format
-
-          # Check if any files were modified
-          if ! git diff --exit-code; then
-            echo "Code formatting changes required in ${{ matrix.submodule }}!"
-            echo "Please run 'make format' locally and commit the changes."
-            echo ""
-            echo "Files that need formatting:"
-            git diff --name-only
-            exit 1
-          fi
-
-          echo "Code formatting is correct in ${{ matrix.submodule }}"
+      - name: Check formatting
+        run: make format

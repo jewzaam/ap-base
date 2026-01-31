@@ -2,19 +2,30 @@
 # Workflow for managing patches across submodules
 
 .PHONY: init deinit apply-patches apply-patch-% push-patches push-patch-% clean-patches status help
+.PHONY: test lint format coverage typecheck validate
 
-SUBMODULES := ap-common ap-cull-lights ap-fits-headers ap-master-calibration ap-move-calibration ap-move-lights
+SUBMODULES := ap-common ap-cull-lights ap-empty-directory ap-fits-headers ap-master-calibration ap-move-calibration ap-move-lights ap-move-lights-to-data
 
 # BRANCH must be set when applying patches, e.g.: make apply-patches BRANCH=readme-fixes-20260130
 BRANCH ?=
 
 help:
-	@echo "ap-base patch management"
+	@echo "ap-base patch management and validation"
 	@echo ""
-	@echo "Targets:"
+	@echo "Validation targets:"
+	@echo "  validate       - Run all validation checks (test, lint, format, typecheck)"
+	@echo "  test           - Run tests in all submodules"
+	@echo "  lint           - Run linter in all submodules"
+	@echo "  format         - Run format check in all submodules"
+	@echo "  coverage       - Run coverage in all submodules"
+	@echo "  typecheck      - Run type check in all submodules"
+	@echo ""
+	@echo "Submodule management:"
 	@echo "  init           - Initialize and update all submodules"
 	@echo "  deinit         - Deinitialize submodules and clear cache (clean slate)"
 	@echo "  status         - Show patch status for each submodule"
+	@echo ""
+	@echo "Patch management:"
 	@echo "  apply-patches  - Apply all patches for BRANCH and create branches"
 	@echo "  push-patches   - Push all branches with applied patches"
 	@echo "  clean-patches  - Reset all submodules to main branch"
@@ -27,6 +38,7 @@ help:
 	@echo "  BRANCH         - Branch name for patches (e.g., readme-fixes-20260130)"
 	@echo ""
 	@echo "Example workflow:"
+	@echo "  make validate                                  # Run all checks"
 	@echo "  make deinit                                    # Clean slate"
 	@echo "  make init                                      # Fresh submodules"
 	@echo "  make apply-patches BRANCH=readme-fixes-20260130"
@@ -136,3 +148,61 @@ clean-patches:
 		echo "Resetting $$sub to main..."; \
 		cd $$sub && git checkout main && git clean -fd && cd ..; \
 	done
+
+# =============================================================================
+# Validation targets - run make targets across all submodules
+# =============================================================================
+
+test: init
+	@echo "Running tests in all submodules..."
+	@for sub in $(SUBMODULES); do \
+		echo ""; \
+		echo "=== Testing $$sub ==="; \
+		$(MAKE) -C $$sub test || exit 1; \
+	done
+	@echo ""
+	@echo "All tests passed."
+
+lint: init
+	@echo "Running linter in all submodules..."
+	@for sub in $(SUBMODULES); do \
+		echo ""; \
+		echo "=== Linting $$sub ==="; \
+		$(MAKE) -C $$sub lint || exit 1; \
+	done
+	@echo ""
+	@echo "All lint checks passed."
+
+format: init
+	@echo "Checking format in all submodules..."
+	@for sub in $(SUBMODULES); do \
+		echo ""; \
+		echo "=== Formatting $$sub ==="; \
+		$(MAKE) -C $$sub format || exit 1; \
+	done
+	@echo ""
+	@echo "All format checks passed."
+
+coverage: init
+	@echo "Running coverage in all submodules..."
+	@for sub in $(SUBMODULES); do \
+		echo ""; \
+		echo "=== Coverage $$sub ==="; \
+		$(MAKE) -C $$sub coverage || exit 1; \
+	done
+	@echo ""
+	@echo "All coverage checks passed."
+
+typecheck: init
+	@echo "Running type check in all submodules..."
+	@for sub in $(SUBMODULES); do \
+		echo ""; \
+		echo "=== Type checking $$sub ==="; \
+		$(MAKE) -C $$sub typecheck || exit 1; \
+	done
+	@echo ""
+	@echo "All type checks passed."
+
+validate: test lint format typecheck
+	@echo ""
+	@echo "=== All validation checks passed ==="
