@@ -1,27 +1,24 @@
 [submodule "ap-common"]
 	path = ap-common
 	url = https://github.com/jewzaam/ap-common.git
-[submodule "ap-move-lights"]
-	path = ap-move-lights
-	url = https://github.com/jewzaam/ap-move-lights.git
-[submodule "ap-fits-headers"]
-	path = ap-fits-headers
-	url = https://github.com/jewzaam/ap-fits-headers.git
-[submodule "ap-cull-lights"]
-	path = ap-cull-lights
-	url = https://github.com/jewzaam/ap-cull-lights.git
-[submodule "ap-master-calibration"]
-	path = ap-master-calibration
-	url = https://github.com/jewzaam/ap-master-calibration.git
-[submodule "ap-move-calibration"]
-	path = ap-move-calibration
-	url = https://github.com/jewzaam/ap-move-calibration.git
-[submodule "legacy/brave-new-world"]
-	path = legacy/brave-new-world
-	url = https://github.com/jewzaam/brave-new-world.git
-[submodule "ap-move-lights-to-data"]
-	path = ap-move-lights-to-data
-	url = https://github.com/jewzaam/ap-move-lights-to-data.git
+[submodule "ap-move-raw-light-to-blink"]
+	path = ap-move-raw-light-to-blink
+	url = https://github.com/jewzaam/ap-move-raw-light-to-blink.git
+[submodule "ap-preserve-header"]
+	path = ap-preserve-header
+	url = https://github.com/jewzaam/ap-preserve-header.git
+[submodule "ap-cull-light"]
+	path = ap-cull-light
+	url = https://github.com/jewzaam/ap-cull-light.git
+[submodule "ap-create-master"]
+	path = ap-create-master
+	url = https://github.com/jewzaam/ap-create-master.git
+[submodule "ap-move-master-to-library"]
+	path = ap-move-master-to-library
+	url = https://github.com/jewzaam/ap-move-master-to-library.git
+[submodule "ap-move-light-to-data"]
+	path = ap-move-light-to-data
+	url = https://github.com/jewzaam/ap-move-light-to-data.git
 [submodule "ap-empty-directory"]
 	path = ap-empty-directory
 	url = https://github.com/jewzaam/ap-empty-directory.git
