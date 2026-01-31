@@ -9,6 +9,18 @@ on:
 jobs:
   coverage:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        submodule:
+          - ap-common
+          - ap-cull-lights
+          - ap-empty-directory
+          - ap-fits-headers
+          - ap-master-calibration
+          - ap-move-calibration
+          - ap-move-lights
+          - ap-move-lights-to-data
 
     steps:
       - uses: actions/checkout@v4
@@ -20,5 +32,5 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Run coverage
-        run: make coverage
+      - name: Run coverage for ${{ matrix.submodule }}
+        run: make coverage-${{ matrix.submodule }}
