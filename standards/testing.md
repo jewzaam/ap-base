@@ -12,8 +12,9 @@ Use pytest with pytest-cov for coverage.
 tests/
 ├── __init__.py
 ├── test_<module>.py
-└── fixtures/          # Test data files (use Git LFS)
-    └── sample.fits
+├── conftest.py        # Shared fixtures
+└── fixtures/          # Test data files
+    └── README.md
 ```
 
 ## Test Isolation
@@ -42,14 +43,31 @@ def test_copy_file(tmp_path):
 
 ## Test Data (Fixtures)
 
-Store test data files in `tests/fixtures/` using Git LFS:
+**⚠️ DO NOT USE GIT LFS**
 
-```bash
-git lfs track "tests/fixtures/*.fits"
-git lfs track "tests/fixtures/*.xisf"
+Git LFS has a $0 budget limit and is not funded for these projects. Large binary files will cause CI failures and block development.
+
+Store test data files in `tests/fixtures/`. Prefer small, minimal test files:
+
+- **Generate programmatically** when possible (mock FITS headers, minimal valid files)
+- **Keep fixtures small** - only what's needed to test functionality
+- **Avoid large binary files** - they bloat the repository
+- **Document fixtures** - add `tests/fixtures/README.md` explaining each file's purpose
+
+Example of generating minimal test data:
+
+```python
+from astropy.io import fits
+
+def create_minimal_fits(path, header_data=None):
+    """Create minimal valid FITS file for testing."""
+    data = np.zeros((10, 10), dtype=np.uint16)
+    hdu = fits.PrimaryHDU(data)
+    if header_data:
+        for key, value in header_data.items():
+            hdu.header[key] = value
+    hdu.writeto(path, overwrite=True)
 ```
-
-Keep fixture files minimal - only what's needed to test functionality.
 
 ## Naming
 

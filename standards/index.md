@@ -20,3 +20,12 @@ Standards for all ap-* astrophotography pipeline projects.
 2. **Simplicity** - Minimal configuration, sensible defaults
 3. **Automation** - CI catches issues before merge
 4. **Discoverability** - Standard locations for everything
+
+## Critical Constraints
+
+**⚠️ Git LFS is prohibited**
+
+- GitHub LFS has a $0 budget limit and is not funded
+- Do not track binary files with Git LFS
+- Generate test fixtures programmatically or use minimal files (< 100KB)
+- Large binary files will cause CI failures and block development
