@@ -24,26 +24,8 @@ index c921fe0..0ee8fc8 100644
  format: install-dev
  	$(PYTHON) -m black ap_empty_directory tests
  
-diff --git a/README.md b/README.md
-index 9e7cc57..ca57b9a 100644
---- a/README.md
-+++ b/README.md
-@@ -1,9 +1,9 @@
- # ap-empty-directory
- 
--[![Test](https://github.com/jewzaam/ap-empty-directory/actions/workflows/test.yml/badge.svg)](https://github.com/jewzaam/ap-empty-directory/actions/workflows/test.yml)
--[![Coverage](https://github.com/jewzaam/ap-empty-directory/actions/workflows/coverage.yml/badge.svg)](https://github.com/jewzaam/ap-empty-directory/actions/workflows/coverage.yml)
--[![Lint](https://github.com/jewzaam/ap-empty-directory/actions/workflows/lint.yml/badge.svg)](https://github.com/jewzaam/ap-empty-directory/actions/workflows/lint.yml)
--[![Format](https://github.com/jewzaam/ap-empty-directory/actions/workflows/format.yml/badge.svg)](https://github.com/jewzaam/ap-empty-directory/actions/workflows/format.yml)
-+[![Test](https://github.com/jewzaam/ap-empty-directory/workflows/Test/badge.svg)](https://github.com/jewzaam/ap-empty-directory/actions/workflows/test.yml)
-+[![Coverage](https://github.com/jewzaam/ap-empty-directory/workflows/Coverage%20Check/badge.svg)](https://github.com/jewzaam/ap-empty-directory/actions/workflows/coverage.yml)
-+[![Lint](https://github.com/jewzaam/ap-empty-directory/workflows/Lint/badge.svg)](https://github.com/jewzaam/ap-empty-directory/actions/workflows/lint.yml)
-+[![Format](https://github.com/jewzaam/ap-empty-directory/workflows/Format%20Check/badge.svg)](https://github.com/jewzaam/ap-empty-directory/actions/workflows/format.yml)
- [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
- [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
- 
 diff --git a/pyproject.toml b/pyproject.toml
-index 65f0983..033fe96 100644
+index 65f0983..ca5477a 100644
 --- a/pyproject.toml
 +++ b/pyproject.toml
 @@ -33,6 +33,7 @@ dev = [
@@ -54,3 +36,10 @@ index 65f0983..033fe96 100644
  ]
  
  [project.scripts]
+@@ -46,3 +47,6 @@ include = ["ap_empty_directory*"]
+ testpaths = ["tests"]
+ python_files = ["test_*.py"]
+ python_functions = ["test_*"]
++
++[tool.mypy]
++ignore_missing_imports = true
