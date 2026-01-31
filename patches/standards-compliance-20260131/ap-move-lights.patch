@@ -1,0 +1,113 @@
+diff --git a/MANIFEST.in b/MANIFEST.in
+index 2ca9d6f..e13eed4 100644
+--- a/MANIFEST.in
++++ b/MANIFEST.in
+@@ -1,5 +1,3 @@
+-include README.md
+ include LICENSE
+-include Makefile
+-include pyproject.toml
+-recursive-include ap_copy_lights *.py
++include README.md
++recursive-include ap_move_lights *.py
+diff --git a/Makefile b/Makefile
+index 1f43167..669bced 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,10 +1,10 @@
+-.PHONY: install install-dev install-deps uninstall clean format lint test test-verbose test-coverage coverage default
++.PHONY: install install-dev install-deps uninstall clean format lint typecheck test test-verbose test-coverage coverage default
+ 
+ # Detect Python command (works on Windows and Unix)
+ PYTHON := python
+ 
+ # Default target: run all checks
+-default: format lint test coverage
++default: format lint typecheck test coverage
+ 
+ # Installation targets
+ install:
+@@ -36,6 +36,10 @@ format: install-dev
+ lint: install-dev
+ 	$(PYTHON) -m flake8 --jobs=1 --max-line-length=88 --extend-ignore=E203,E266,E501,W503,F401,W605,E722 ap_move_lights tests
+ 
++# Type check with mypy
++typecheck: install-dev
++	$(PYTHON) -m mypy ap_move_lights
++
+ # Testing (install deps first, then run tests)
+ test: install-dev
+ 	$(PYTHON) -m pytest
+diff --git a/README.md b/README.md
+index c86dc5b..5dcf464 100644
+--- a/README.md
++++ b/README.md
+@@ -1,6 +1,13 @@
+ # ap-move-lights
+ 
+-A simple tool for moving and organizing astrophotography files from a raw directory to a destination directory, organizing them based on FITS header metadata.
++[![Test](https://github.com/jewzaam/ap-move-lights/workflows/Test/badge.svg)](https://github.com/jewzaam/ap-move-lights/actions/workflows/test.yml)
++[![Coverage](https://github.com/jewzaam/ap-move-lights/workflows/Coverage%20Check/badge.svg)](https://github.com/jewzaam/ap-move-lights/actions/workflows/coverage.yml)
++[![Lint](https://github.com/jewzaam/ap-move-lights/workflows/Lint/badge.svg)](https://github.com/jewzaam/ap-move-lights/actions/workflows/lint.yml)
++[![Format](https://github.com/jewzaam/ap-move-lights/workflows/Format%20Check/badge.svg)](https://github.com/jewzaam/ap-move-lights/actions/workflows/format.yml)
++[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
++[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
++
++A tool for moving and organizing astrophotography files from a raw directory to a destination directory based on FITS header metadata.
+ 
+ ## Overview
+ 
+diff --git a/ap_move_lights/__main__.py b/ap_move_lights/__main__.py
+new file mode 100644
+index 0000000..a809f26
+--- /dev/null
++++ b/ap_move_lights/__main__.py
+@@ -0,0 +1,6 @@
++"""Entry point for running ap-move-lights as a module."""
++
++from ap_move_lights.move_lights import main
++
++if __name__ == "__main__":
++    main()
+diff --git a/pyproject.toml b/pyproject.toml
+index ee110bd..a1f5fac 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -7,8 +7,8 @@ name = "ap-move-lights"
+ version = "0.1.0"
+ description = "Move and organize astrophotography files from raw directory to destination based on FITS header metadata"
+ readme = "README.md"
+-requires-python = ">=3.8"
+-license = {text = "Apache-2.0"}
++requires-python = ">=3.10"
++license = {file = "LICENSE"}
+ authors = [
+     {name = "Naveen Malik"}
+ ]
+@@ -16,10 +16,7 @@ keywords = ["astrophotography", "fits", "file-organization"]
+ classifiers = [
+     "Development Status :: 4 - Beta",
+     "Intended Audience :: Science/Research",
+-    "License :: OSI Approved :: Apache Software License",
+     "Programming Language :: Python :: 3",
+-    "Programming Language :: Python :: 3.8",
+-    "Programming Language :: Python :: 3.9",
+     "Programming Language :: Python :: 3.10",
+     "Programming Language :: Python :: 3.11",
+     "Programming Language :: Python :: 3.12",
+@@ -39,10 +36,11 @@ ap-move-lights = "ap_move_lights.move_lights:main"
+ 
+ [project.optional-dependencies]
+ dev = [
+-    "pytest",
+-    "pytest-cov",
+-    "black",
+-    "flake8",
++    "pytest>=7.0",
++    "pytest-cov>=4.0",
++    "black>=23.0",
++    "flake8>=6.0",
++    "mypy>=1.0",
+ ]
+ 
+ [tool.setuptools]

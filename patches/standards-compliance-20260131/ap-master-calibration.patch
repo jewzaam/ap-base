@@ -1,0 +1,87 @@
+diff --git a/Makefile b/Makefile
+index ab40c1d..111289c 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,10 +1,10 @@
+-.PHONY: install install-dev install-deps uninstall clean format lint test test-verbose test-coverage coverage default
++.PHONY: install install-dev install-deps uninstall clean format lint typecheck test test-verbose test-coverage coverage default
+ 
+ # Detect Python command (works on Windows and Unix)
+ PYTHON := python
+ 
+ # Default target: run all checks
+-default: format lint test coverage
++default: format lint typecheck test coverage
+ 
+ # Installation targets
+ install:
+@@ -36,6 +36,10 @@ format: install-dev
+ lint: install-dev
+ 	$(PYTHON) -m flake8 --jobs=1 --max-line-length=88 --extend-ignore=E203,E266,E501,W503,F401,W605,E722 ap_master_calibration tests
+ 
++# Type check with mypy
++typecheck: install-dev
++	$(PYTHON) -m mypy ap_master_calibration
++
+ # Testing (install deps first, then run tests)
+ test: install-dev
+ 	$(PYTHON) -m pytest
+diff --git a/README.md b/README.md
+index cfa70a6..e94f9ee 100644
+--- a/README.md
++++ b/README.md
+@@ -1,4 +1,11 @@
+-# Master Calibration Frame Automation
++# ap-master-calibration
++
++[![Test](https://github.com/jewzaam/ap-master-calibration/workflows/Test/badge.svg)](https://github.com/jewzaam/ap-master-calibration/actions/workflows/test.yml)
++[![Coverage](https://github.com/jewzaam/ap-master-calibration/workflows/Coverage%20Check/badge.svg)](https://github.com/jewzaam/ap-master-calibration/actions/workflows/coverage.yml)
++[![Lint](https://github.com/jewzaam/ap-master-calibration/workflows/Lint/badge.svg)](https://github.com/jewzaam/ap-master-calibration/actions/workflows/lint.yml)
++[![Format](https://github.com/jewzaam/ap-master-calibration/workflows/Format%20Check/badge.svg)](https://github.com/jewzaam/ap-master-calibration/actions/workflows/format.yml)
++[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
++[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+ 
+ Automated generation of master bias, dark, and flat calibration frames for PixInsight.
+ 
+diff --git a/pyproject.toml b/pyproject.toml
+index b88ec6e..466ee97 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -7,8 +7,8 @@ name = "ap-master-calibration"
+ version = "0.1.0"
+ description = "Automated master calibration frame generation for PixInsight"
+ readme = "README.md"
+-requires-python = ">=3.8"
+-license = {text = "Apache-2.0"}
++requires-python = ">=3.10"
++license = {file = "LICENSE"}
+ authors = [
+     {name = "Naveen Malik"}
+ ]
+@@ -16,10 +16,7 @@ keywords = ["astrophotography", "fits", "pixinsight", "calibration", "master-fra
+ classifiers = [
+     "Development Status :: 4 - Beta",
+     "Intended Audience :: Science/Research",
+-    "License :: OSI Approved :: Apache Software License",
+     "Programming Language :: Python :: 3",
+-    "Programming Language :: Python :: 3.8",
+-    "Programming Language :: Python :: 3.9",
+     "Programming Language :: Python :: 3.10",
+     "Programming Language :: Python :: 3.11",
+     "Programming Language :: Python :: 3.12",
+@@ -39,10 +36,11 @@ ap-master-calibration = "ap_master_calibration.calibrate_masters:main"
+ 
+ [project.optional-dependencies]
+ dev = [
+-    "pytest",
+-    "pytest-cov",
+-    "black",
+-    "flake8",
++    "pytest>=7.0",
++    "pytest-cov>=4.0",
++    "black>=23.0",
++    "flake8>=6.0",
++    "mypy>=1.0",
+ ]
+ 
+ [tool.setuptools]

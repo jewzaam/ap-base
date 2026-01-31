@@ -1,0 +1,84 @@
+diff --git a/Makefile b/Makefile
+index 091e2bb..2f52918 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,10 +1,10 @@
+-.PHONY: install install-dev install-deps uninstall clean format lint test test-verbose test-coverage coverage default
++.PHONY: install install-dev install-deps uninstall clean format lint typecheck test test-verbose test-coverage coverage default
+ 
+ # Detect Python command (works on Windows and Unix)
+ PYTHON := python
+ 
+ # Default target: run all checks
+-default: format lint test coverage
++default: format lint typecheck test coverage
+ 
+ # Installation targets
+ install:
+@@ -38,6 +38,11 @@ lint:
+ 	-$(PYTHON) -m pip install -e ".[dev]" >nul 2>&1 || true
+ 	$(PYTHON) -m flake8 --jobs=1 --max-line-length=88 --extend-ignore=E203,E266,E501,W503,F401,W605,E722 ap_common tests
+ 
++# Type check with mypy
++typecheck:
++	-$(PYTHON) -m pip install -e ".[dev]" >nul 2>&1 || true
++	$(PYTHON) -m mypy ap_common
++
+ # Testing (try to install deps, but continue if it fails - dependencies may already be installed)
+ test:
+ 	-$(PYTHON) -m pip install -e ".[dev]" >nul 2>&1 || true
+diff --git a/ap_common/__main__.py b/ap_common/__main__.py
+new file mode 100644
+index 0000000..e8f0e6d
+--- /dev/null
++++ b/ap_common/__main__.py
+@@ -0,0 +1,20 @@
++"""Entry point for running ap-common as a module.
++
++This module is a library and does not have a CLI. Running it will display usage information.
++"""
++
++import sys
++
++
++def main():
++    """Display usage information."""
++    print("ap-common is a library module providing shared functionality.")
++    print("It does not have a command-line interface.")
++    print()
++    print("Import it in your code:")
++    print("  from ap_common import fits, metadata, filesystem")
++    return 0
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+diff --git a/pyproject.toml b/pyproject.toml
+index 85f3cee..a1c2004 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -11,7 +11,7 @@ requires-python = ">=3.10"
+ license = "Apache-2.0"
+ license-files = ["LICENSE"]
+ authors = [
+-    {name = "Your Name"}
++    {name = "Naveen Malik"}
+ ]
+ keywords = ["astrophotography", "fits", "xisf", "metadata", "normalization"]
+ classifiers = [
+@@ -32,10 +32,11 @@ dependencies = [
+ 
+ [project.optional-dependencies]
+ dev = [
+-    "pytest",
+-    "pytest-cov",
+-    "black",
+-    "flake8",
++    "pytest>=7.0",
++    "pytest-cov>=4.0",
++    "black>=23.0",
++    "flake8>=6.0",
++    "mypy>=1.0",
+ ]
+ 
+ [tool.setuptools]

@@ -1,0 +1,145 @@
+diff --git a/MANIFEST.in b/MANIFEST.in
+new file mode 100644
+index 0000000..b31ece7
+--- /dev/null
++++ b/MANIFEST.in
+@@ -0,0 +1,3 @@
++include LICENSE
++include README.md
++recursive-include ap_move_calibration *.py
+diff --git a/Makefile b/Makefile
+index 56a572a..905c6d6 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,10 +1,10 @@
+-.PHONY: install install-dev install-deps uninstall clean format lint test test-verbose test-coverage coverage default
++.PHONY: install install-dev install-deps uninstall clean format lint typecheck test test-verbose test-coverage coverage default
+ 
+ # Detect Python command (works on Windows and Unix)
+ PYTHON := python
+ 
+ # Default target: run all checks
+-default: format lint test coverage
++default: format lint typecheck test coverage
+ 
+ # Installation targets
+ install:
+@@ -36,6 +36,10 @@ format: install-dev
+ lint: install-dev
+ 	$(PYTHON) -m flake8 --jobs=1 --max-line-length=88 --extend-ignore=E203,E266,E501,W503,F401,W605,E722 ap_move_calibration tests
+ 
++# Type check with mypy
++typecheck: install-dev
++	$(PYTHON) -m mypy ap_move_calibration
++
+ # Testing (install deps first, then run tests)
+ test: install-dev
+ 	$(PYTHON) -m pytest
+diff --git a/README.md b/README.md
+new file mode 100644
+index 0000000..470193f
+--- /dev/null
++++ b/README.md
+@@ -0,0 +1,41 @@
++# ap-move-calibration
++
++[![Test](https://github.com/jewzaam/ap-move-calibration/workflows/Test/badge.svg)](https://github.com/jewzaam/ap-move-calibration/actions/workflows/test.yml)
++[![Coverage](https://github.com/jewzaam/ap-move-calibration/workflows/Coverage%20Check/badge.svg)](https://github.com/jewzaam/ap-move-calibration/actions/workflows/coverage.yml)
++[![Lint](https://github.com/jewzaam/ap-move-calibration/workflows/Lint/badge.svg)](https://github.com/jewzaam/ap-move-calibration/actions/workflows/lint.yml)
++[![Format](https://github.com/jewzaam/ap-move-calibration/workflows/Format%20Check/badge.svg)](https://github.com/jewzaam/ap-move-calibration/actions/workflows/format.yml)
++[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
++[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
++
++Copy and organize master calibration frames from source to organized library based on FITS/XISF header metadata.
++
++## Overview
++
++This tool copies master calibration frames (bias, dark, flat) from a source directory to an organized library structure, using FITS/XISF header metadata to create a consistent naming and organization scheme.
++
++## Installation
++
++### Development
++
++```bash
++make install-dev
++```
++
++### From Git
++
++```bash
++pip install git+https://github.com/jewzaam/ap-move-calibration.git
++```
++
++## Usage
++
++```bash
++python -m ap_move_calibration <source_dir> <dest_dir> [options]
++```
++
++### Options
++
++| Option | Description |
++|--------|-------------|
++| `--debug` | Enable debug output |
++| `--dryrun` | Preview without changes |
+diff --git a/ap_move_calibration/__main__.py b/ap_move_calibration/__main__.py
+new file mode 100644
+index 0000000..9e2e949
+--- /dev/null
++++ b/ap_move_calibration/__main__.py
+@@ -0,0 +1,6 @@
++"""Entry point for running ap-move-calibration as a module."""
++
++from ap_move_calibration.move_calibration import main
++
++if __name__ == "__main__":
++    main()
+diff --git a/pyproject.toml b/pyproject.toml
+index 5ea170e..770ee83 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -7,8 +7,8 @@ name = "ap-move-calibration"
+ version = "0.1.0"
+ description = "Copy and organize master calibration frames from source to organized library based on FITS/XISF header metadata"
+ readme = "README.md"
+-requires-python = ">=3.8"
+-license = {text = "Apache-2.0"}
++requires-python = ">=3.10"
++license = {file = "LICENSE"}
+ authors = [
+     {name = "Naveen Malik"}
+ ]
+@@ -16,10 +16,7 @@ keywords = ["astrophotography", "fits", "xisf", "calibration", "file-organizatio
+ classifiers = [
+     "Development Status :: 4 - Beta",
+     "Intended Audience :: Science/Research",
+-    "License :: OSI Approved :: Apache Software License",
+     "Programming Language :: Python :: 3",
+-    "Programming Language :: Python :: 3.8",
+-    "Programming Language :: Python :: 3.9",
+     "Programming Language :: Python :: 3.10",
+     "Programming Language :: Python :: 3.11",
+     "Programming Language :: Python :: 3.12",
+@@ -39,10 +36,11 @@ ap-move-calibration = "ap_move_calibration.move_calibration:main"
+ 
+ [project.optional-dependencies]
+ dev = [
+-    "pytest",
+-    "pytest-cov",
+-    "black",
+-    "flake8",
++    "pytest>=7.0",
++    "pytest-cov>=4.0",
++    "black>=23.0",
++    "flake8>=6.0",
++    "mypy>=1.0",
+ ]
+ 
+ [tool.setuptools]
+diff --git a/tests/__init__.py b/tests/__init__.py
+new file mode 100644
+index 0000000..c7b019e
+--- /dev/null
++++ b/tests/__init__.py
+@@ -0,0 +1 @@
++"""Tests for ap-move-calibration."""

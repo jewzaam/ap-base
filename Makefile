@@ -3,7 +3,7 @@
 
 .PHONY: init deinit apply-patches apply-patch-% push-patches push-patch-% clean-patches status help
 
-SUBMODULES := ap-common ap-cull-lights ap-fits-headers ap-master-calibration ap-move-calibration ap-move-lights
+SUBMODULES := ap-common ap-cull-lights ap-empty-directory ap-fits-headers ap-master-calibration ap-move-calibration ap-move-lights ap-move-lights-to-data
 
 # BRANCH must be set when applying patches, e.g.: make apply-patches BRANCH=readme-fixes-20260130
 BRANCH ?=
