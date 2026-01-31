@@ -32,8 +32,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          lfs: true
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
@@ -274,15 +272,3 @@ Workflows should call Makefile targets, not duplicate commands:
 - name: Run tests
   run: make test
 ```
-
-### Git LFS
-
-For projects with test fixtures tracked in Git LFS (e.g., FITS/XISF files), add `lfs: true` to the checkout step in test.yml:
-
-```yaml
-- uses: actions/checkout@v4
-  with:
-    lfs: true
-```
-
-This ensures fixture files are downloaded rather than just their LFS pointer files.

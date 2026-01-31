@@ -114,6 +114,9 @@ htmlcov/
 # Virtual environments
 venv/
 .venv/
+
+# Claude Code local settings
+.claude/settings.local.json
 ```
 
 ## MANIFEST.in
