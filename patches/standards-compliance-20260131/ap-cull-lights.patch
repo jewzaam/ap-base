@@ -275,7 +275,7 @@ index 0000000..ff72331
 +if __name__ == "__main__":
 +    main()
 diff --git a/pyproject.toml b/pyproject.toml
-index 2c82a94..91c20cd 100644
+index 2c82a94..e9d4e6d 100644
 --- a/pyproject.toml
 +++ b/pyproject.toml
 @@ -7,8 +7,8 @@ name = "ap-cull-lights"
@@ -316,3 +316,11 @@ index 2c82a94..91c20cd 100644
  ]
  
  [tool.setuptools]
+@@ -72,3 +70,7 @@ target-version = ["py310", "py311", "py312", "py313", "py314"]
+ [tool.flake8]
+ max-line-length = 88
+ extend-ignore = ["E203", "E266", "E501", "W503", "F401", "W605", "E722"]
++
++[tool.mypy]
++ignore_missing_imports = true
++disable_error_code = ["var-annotated"]
