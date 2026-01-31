@@ -20,7 +20,7 @@ ap-base/
 ├── ap-move-lights/      # Light frame organization
 ├── legacy/
 │   └── brave-new-world/ # Legacy codebase for reference
-├── patches/             # Git patches organized by branch name
+├── patches/             # Git patches (flat: one per submodule)
 ├── standards/           # Project standards documentation
 ├── Makefile             # Patch application workflow
 ├── CLAUDE.md            # This file (workflow instructions)
@@ -50,19 +50,16 @@ Changes for submodules are stored as git patches in `patches/`. This allows:
 
 ### Patches Directory
 
-Patches are organized by branch name in subdirectories:
+Patches use a flat structure with one patch file per submodule:
 
 ```
 patches/
-├── readme-crosslinks-20260130/
-│   ├── ap-common.patch
-│   ├── ap-cull-lights.patch
-│   └── ...
-└── makefile-fixes-20260201/
-    └── ap-common.patch
+├── ap-common.patch
+├── ap-cull-lights.patch
+└── ...
 ```
 
-Branch naming convention: `<description>-<YYYYMMDD>`
+**Key principle**: Patches are temporary staging, not permanent storage. Delete them after submodule changes are merged upstream.
 
 ### Quick Reference
 
@@ -73,14 +70,18 @@ make init
 
 # Check available patches
 make status
-make status BRANCH=readme-crosslinks-20260130
 
-# Apply and push patches
-make apply-patches BRANCH=readme-crosslinks-20260130
-make push-patches BRANCH=readme-crosslinks-20260130
+# Apply patches and run validation
+make validate
+
+# Push patches to submodule forks
+make push-patches BRANCH=my-feature
 
 # Reset submodules
 make clean-patches
+
+# Cleanup after submodule merge
+rm patches/<submodule>.patch
 ```
 
 **See [PATCHING.md](PATCHING.md) for detailed workflow documentation.**

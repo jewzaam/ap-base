@@ -6,41 +6,56 @@ This document describes how to create and apply patches for submodule repositori
 
 Because Claude Code sessions are scoped to a single repository, changes to submodules must be prepared as git patches in `ap-base` and then applied locally by the user.
 
+**Key principle**: Patches are a temporary staging area, not permanent storage. They bridge the gap between Claude sessions and submodule repos, and should be deleted after the submodule changes are merged upstream.
+
 ## Directory Structure
 
-Patches are organized by branch name in subdirectories:
+Patches use a flat structure with one patch file per submodule:
 
 ```
 patches/
-├── readme-crosslinks-20260130/
-│   ├── ap-common.patch
-│   ├── ap-cull-lights.patch
-│   └── ...
-├── makefile-fixes-20260201/
-│   └── ap-common.patch
+├── ap-common.patch
+├── ap-cull-lights.patch
 └── ...
 ```
 
-Each subdirectory name becomes the branch name in the target submodule.
+**Constraints**:
+- Maximum one patch per submodule at a time
+- Patches should not accumulate - delete after submodule merges
+- If you need multiple changes to the same submodule, merge the first before starting the second
 
-## Branch Naming Convention
-
-Use descriptive names with a timestamp suffix:
+## Patch Lifecycle
 
 ```
-<description>-<YYYYMMDD>
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 1. CLAUDE SESSION                                                           │
+│    - Claude makes changes to submodule code                                 │
+│    - Claude creates patches/<submodule>.patch                               │
+│    - Claude commits patch to ap-base branch                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 2. LOCAL APPLICATION (User)                                                 │
+│    - make apply-patches                                                     │
+│    - make push-patches REMOTE=<fork>                                        │
+│    - Create PR in submodule repo                                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 3. CLEANUP (After submodule PR merges)                                      │
+│    - Update submodule pointer: git submodule update --remote <submodule>    │
+│    - Delete patch: rm patches/<submodule>.patch                             │
+│    - Commit to ap-base                                                      │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Examples:
-- `readme-crosslinks-20260130`
-- `makefile-standardization-20260201`
-- `license-updates-20260215`
 
 ## Creating Patches
 
 ### 1. Start with clean submodules
 
-Always start from a clean slate to ensure patches apply cleanly:
+Always start from a clean slate:
 
 ```bash
 make deinit
@@ -56,38 +71,30 @@ cd <submodule>
 
 ### 3. Create the patch
 
-For modified files:
+Create the patches directory if it doesn't exist:
+
 ```bash
-git diff > ../patches/<branch-name>/<submodule>.patch
+mkdir -p patches
 ```
 
-For new files (must stage first, then reset):
+For modified files only:
+```bash
+git diff > ../patches/<submodule>.patch
+```
+
+For new files (or both new and modified):
 ```bash
 git add -A
-git diff --cached > ../patches/<branch-name>/<submodule>.patch
+git diff --cached > ../patches/<submodule>.patch
 git reset HEAD
 ```
 
-For both modified and new files:
-```bash
-git add -A
-git diff --cached > ../patches/<branch-name>/<submodule>.patch
-git reset HEAD
-```
-
-### 4. Create the patches directory if needed
-
-```bash
-mkdir -p patches/<branch-name>
-```
-
-### 5. Reset the submodule
-
-After creating the patch, reset to ensure the submodule stays clean:
+### 4. Reset the submodule
 
 ```bash
 git checkout .
 git clean -fd
+cd ..
 ```
 
 Or reset all submodules:
@@ -97,123 +104,166 @@ make deinit
 make init
 ```
 
-## Applying Patches
-
-### Apply all patches for a branch
+### 5. Verify the patch applies
 
 ```bash
-make apply-patches BRANCH=readme-crosslinks-20260130
+make apply-patches
+```
+
+## Applying Patches
+
+### Apply all patches
+
+```bash
+make apply-patches
 ```
 
 This will:
 1. Initialize submodules if needed
-2. For each submodule with a patch in `patches/<BRANCH>/`:
-   - Checkout main and pull latest
-   - Create/checkout the branch named `<BRANCH>`
-   - Apply the patch
-   - Stage and commit changes
+2. For each `patches/<submodule>.patch` file:
+   - Apply the patch to the submodule
 
-### Apply to a specific submodule
-
-```bash
-make apply-patch-ap-common BRANCH=readme-crosslinks-20260130
-```
-
-## Pushing Patches
-
-After applying patches locally, push them to the remote:
-
-### Push all
-
-```bash
-make push-patches BRANCH=readme-crosslinks-20260130
-```
-
-### Push specific submodule
-
-```bash
-make push-patch-ap-common BRANCH=readme-crosslinks-20260130
-```
-
-## Checking Status
-
-View available patch directories and their contents:
+### Check which patches exist
 
 ```bash
 make status
 ```
 
-View patches for a specific branch:
+## Pushing to Submodule Remotes
+
+After applying patches, push them to your fork:
 
 ```bash
-make status BRANCH=readme-crosslinks-20260130
+make push-patches REMOTE=origin BRANCH=my-feature
 ```
 
-## Cleaning Up
+This will:
+1. For each submodule with an applied patch:
+   - Create a branch named `BRANCH`
+   - Commit the changes
+   - Push to `REMOTE`
 
-### Reset submodules to main
+**Note**: You'll need to have your fork configured as a remote in each submodule, or use the upstream remote if you have push access.
+
+## Cleaning Up After Merge
+
+After the submodule PR is merged upstream:
+
+### 1. Update the submodule pointer
 
 ```bash
-make clean-patches
+cd <submodule>
+git fetch origin
+git checkout main
+git pull
+cd ..
+git add <submodule>
 ```
 
-### Full reset (deinit and clear cache)
+### 2. Delete the patch
 
 ```bash
-make deinit
+rm patches/<submodule>.patch
 ```
 
-## Managing Old Patches
+If no patches remain:
+```bash
+rmdir patches  # optional
+```
 
-Old patch directories are not automatically deleted. To remove them:
+### 3. Commit the cleanup
 
 ```bash
-rm -rf patches/<branch-name>
+git add -A
+git commit -m "Update <submodule> after upstream merge, remove patch"
 ```
 
-Or ask Claude to clean up specific patch directories when they are no longer needed.
+## CI/Validation Behavior
 
-## Workflow Summary
+When `make test`, `make lint`, `make validate`, etc. run:
 
-```
-1. make deinit                    # Clean slate
-2. make init                      # Fresh submodules
-3. cd <submodule>                 # Enter submodule
-4. # make changes                 # Edit files
-5. mkdir -p ../patches/<branch>   # Create patch dir
-6. git add -A && git diff --cached > ../patches/<branch>/<submodule>.patch && git reset HEAD
-7. cd ..                          # Back to ap-base
-8. make deinit && make init       # Reset submodules
-9. make apply-patches BRANCH=<branch>   # Test patches apply
-10. make push-patches BRANCH=<branch>   # Push to remotes
-```
+1. Submodules are initialized
+2. If `patches/` directory exists with `.patch` files, they are applied
+3. Validation runs against the patched submodules
 
-## Troubleshooting
+This ensures patches are validated before being applied to submodules.
 
-### Patch doesn't apply
+## What If a Patch Fails to Apply?
 
-If a patch fails to apply, the submodule may have diverged from when the patch was created:
+If a patch fails, the upstream submodule has likely changed since the patch was created.
 
-1. Check if the submodule is on the correct commit
-2. Try `make deinit && make init` to reset
-3. If the upstream has changed, the patch may need to be recreated
-
-### Submodule in dirty state
-
-If submodules have uncommitted changes:
+**Solution**: Regenerate the patch against the new upstream:
 
 ```bash
 make deinit
 make init
+cd <submodule>
+# Re-apply your changes manually or from the old patch
+# Create new patch
+git add -A
+git diff --cached > ../patches/<submodule>.patch
+git reset HEAD
+cd ..
 ```
 
-### Branch already exists
+## FAQ
 
-If the target branch already exists in a submodule, the apply will checkout the existing branch. To start fresh:
+### Can I have multiple patches for the same submodule?
+
+No. The flat structure allows only one patch per submodule. If you need multiple independent changes:
+1. Complete and merge the first change
+2. Then start the second change
+
+This keeps the workflow simple and avoids patch conflicts.
+
+### Should patches be on the main branch?
+
+Ideally, no. Patches represent in-flight work. The cleanest workflow:
+- Feature branch: contains patches
+- Main branch: patches deleted after submodule merges
+
+However, if patches need to persist briefly on main (e.g., waiting for submodule PR review), that's acceptable.
+
+### What if upstream changes while my patch is pending?
+
+Your patch may fail to apply. This is correct behavior - it forces you to reconcile your changes with upstream. Regenerate the patch against the new upstream.
+
+### How do I handle coordinated changes across multiple submodules?
+
+Create a patch for each submodule. They can all be in `patches/` at the same time:
+
+```
+patches/
+├── ap-common.patch
+├── ap-cull-lights.patch
+└── ap-fits-headers.patch
+```
+
+Apply and push them together, then clean up each as their respective PRs merge.
+
+## Quick Reference
 
 ```bash
-cd <submodule>
-git branch -D <branch-name>
-cd ..
-make apply-patch-<submodule> BRANCH=<branch-name>
+# Setup
+make deinit && make init
+
+# Create patch (from submodule directory)
+git add -A && git diff --cached > ../patches/<submodule>.patch && git reset HEAD
+
+# Verify patches apply
+make deinit && make init && make apply-patches
+
+# Run validation with patches
+make validate
+
+# Push patches to forks
+make push-patches REMOTE=origin BRANCH=my-feature
+
+# Check status
+make status
+
+# Cleanup after merge
+rm patches/<submodule>.patch
+git submodule update --remote <submodule>
+git add -A && git commit -m "Cleanup after merge"
 ```
