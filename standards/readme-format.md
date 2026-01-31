@@ -10,6 +10,7 @@ Standard structure for ap-* project READMEs.
 4. Overview (what it does, key features)
 5. Installation
 6. Usage (with examples)
+7. Related Projects (boilerplate link to ap-base)
 
 ## Title
 
@@ -93,6 +94,19 @@ python -m ap_<name>.<module> <source_dir> <dest_dir> [options]
 ```
 
 Include 1-2 concrete examples with real-looking paths.
+
+## Related Projects
+
+Link to the ap-base monorepo for comprehensive documentation:
+
+```markdown
+## Related Projects
+
+This project is part of the astrophotography pipeline. See [ap-base](https://github.com/jewzaam/ap-base) for:
+- Pipeline overview and workflow documentation
+- Links to all pipeline projects
+- Cross-project development instructions
+```
 
 ## What to Avoid
 

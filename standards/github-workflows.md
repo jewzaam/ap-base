@@ -100,8 +100,11 @@ jobs:
       - name: Install dependencies
         run: make install-dev
 
-      - name: Check formatting
-        run: $(PYTHON) -m black --check ap_<name> tests
+      - name: Run formatter
+        run: make format
+
+      - name: Check for changes
+        run: git diff --exit-code
 ```
 
 ## coverage.yml
@@ -132,6 +135,10 @@ jobs:
 
       - name: Run coverage
         run: make coverage
+
+      - name: Check coverage threshold
+        run: |
+          coverage report --fail-under=80
 ```
 
 ## Conventions

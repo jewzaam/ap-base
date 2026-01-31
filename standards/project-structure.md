@@ -81,8 +81,10 @@ dependencies = []
 dev = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
+    "coverage>=7.0",
     "black>=23.0",
     "flake8>=6.0",
+    "mypy>=1.8,<2.0",
 ]
 
 [tool.setuptools.packages.find]
