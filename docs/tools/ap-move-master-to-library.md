@@ -15,7 +15,7 @@ pip install git+https://github.com/jewzaam/ap-move-master-to-library.git
 ## Usage
 
 ```bash
-python -m ap_move_calibration <source_dir> <dest_dir> [options]
+python -m ap_move_master_to_library <source_dir> <dest_dir> [options]
 ```
 
 ### Options
@@ -83,25 +83,25 @@ Identifies master frame type from `IMAGETYP` header:
 ### Basic Usage
 
 ```bash
-python -m ap_move_calibration /pixinsight/output/master /calibration/library
+python -m ap_move_master_to_library /pixinsight/output/master /calibration/library
 ```
 
 ### Preview Changes
 
 ```bash
-python -m ap_move_calibration /output /library --dryrun
+python -m ap_move_master_to_library /output /library --dryrun
 ```
 
 ### Fail on Existing Files
 
 ```bash
-python -m ap_move_calibration /output /library --no-overwrite
+python -m ap_move_master_to_library /output /library --no-overwrite
 ```
 
 ### Debug Output
 
 ```bash
-python -m ap_move_calibration /output /library --debug
+python -m ap_move_master_to_library /output /library --debug
 ```
 
 ## Workflow Integration
@@ -110,11 +110,11 @@ This tool is typically used after master generation:
 
 ```bash
 # 1. Generate masters with PixInsight
-python -m ap_master_calibration /raw_calibration /output \
+python -m ap_create_master /raw_calibration /output \
     --pixinsight-binary "/path/to/PixInsight"
 
 # 2. Organize into library
-python -m ap_move_calibration /output/master /calibration/library
+python -m ap_move_master_to_library /output/master /calibration/library
 ```
 
 ## Library Benefits

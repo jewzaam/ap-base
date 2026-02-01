@@ -1,74 +1,128 @@
 # ap-copy-master-to-blink
 
-Copy master calibration frames from library to blink directories for light frame processing.
+Copy master calibration frames from library to blink directories where light frames are located.
 
 ## Overview
 
-**Status**: Placeholder - This tool has not been implemented yet.
+`ap-copy-master-to-blink` prepares light frames for processing by copying their required master calibration frames from the calibration library to the blink directories. This ensures calibration frames are in place before lights are moved to the data directory.
 
-This tool will automate copying master calibration frames (bias, dark, flat) from the calibration library to blink directories where light frames are located. This is a required step before moving lights to the data directory.
+**Note**: This tool is designed for the **darks library workflow** with cooled cameras where master darks are stored in a permanent library and reused across sessions. It is **not designed** for nightly darks workflows with uncooled cameras.
 
-The calibration library serves as permanent storage for master frames. This tool copies (not moves) masters to working directories to make them available for the processing pipeline.
-
-## Planned Functionality
-
-The tool will:
-1. Scan blink directories for light frames
-2. Identify required master frames based on light frame metadata
-3. Search calibration library for matching masters
-4. Copy matching masters to appropriate blink directories
-
-## Matching Criteria
-
-### Dark Matching
-- Camera
-- Set temperature
-- Gain
-- Offset
-- Readout mode
-- Exposure time (prefer equal, use lower/higher if necessary)
-
-### Flat Matching
-- Camera
-- Set temperature
-- Gain
-- Offset
-- Readout mode
-- Filter
-- Date
-
-### Bias Matching
-- Camera
-- Set temperature
-- Gain
-- Offset
-- Readout mode
-
-## Planned Usage
+## Installation
 
 ```bash
-# Copy masters from library to blink directories
-python -m ap_copy_masters_to_blink <library_dir> <blink_dir> [options]
+pip install git+https://github.com/jewzaam/ap-copy-master-to-blink.git
+```
 
-# Dry run to see what would be copied
-python -m ap_copy_masters_to_blink <library_dir> <blink_dir> --dry-run
+## Usage
+
+```bash
+python -m ap_copy_master_to_blink <library_dir> <blink_dir> [options]
+```
+
+### Arguments
+
+| Argument | Description |
+|----------|-------------|
+| `library_dir` | Path to calibration library (supports env vars like `$VAR`) |
+| `blink_dir` | Path to blink directory tree (supports env vars) |
+| `--dry-run` | Show what would be copied without actually copying files |
+| `--debug` | Enable debug logging |
+
+### Examples
+
+```bash
+# Basic usage
+python -m ap_copy_master_to_blink /calibration/library /data/10_Blink
+
+# With dry-run (show what would be copied without copying)
+python -m ap_copy_master_to_blink /calibration/library /data/10_Blink --dry-run
+
+# With debug output
+python -m ap_copy_master_to_blink /calibration/library /data/10_Blink --debug
 ```
 
 ## Workflow Position
 
-This tool fits between:
-1. `ap-move-master-to-library` - Organizes masters into library
-2. **ap-copy-master-to-blink** - Copies masters to blink (this tool)
-3. `ap-move-light-to-data` - Moves lights when calibration available
+1. **ap-move-master-to-library** - Organizes masters into calibration library
+2. **Manual blinking review** - Visual inspection and culling of lights
+3. **ap-copy-master-to-blink** - **(THIS TOOL)** Copies masters to blink directories
+4. **ap-move-light-to-data** - Moves lights to data when calibration complete
 
-## Implementation Notes
+**Important**: Calibration frames are NOT needed for blinking. They are needed before blinked lights can be moved to data.
 
-From legacy workflow (PROCESS-WORKFLOW.md step 2d):
-- Current implementation uses `copycalibration.py` script
-- Needs refactoring to separate four distinct operations
-- Should handle missing flats gracefully (previous night, skip with report, future night)
-- All missing flat scenarios are currently handled manually
+## Master Frame Matching
+
+### Dark Frames
+
+Priority matching (in order):
+
+1. **Exact exposure match**: Same camera, gain, offset, settemp, readoutmode, and exposure time
+2. **Shorter exposure + bias**: If no exact match, find the longest dark exposure < light exposure
+   - **Requires matching bias**: Will not use shorter dark without bias
+3. **No match**: If no exact dark and no bias, skip (logged as missing)
+
+### Flat Frames
+
+- Match by: camera, optic, filter, gain, offset, settemp, readoutmode, focallen
+- **DATE must match exactly**: Current implementation requires exact date match
+
+### Bias Frames
+
+- Match by: camera, gain, offset, settemp, readoutmode
+- **Only copied when needed**: When dark exposure < light exposure
+
+## Directory Structure
+
+### Expected Library Structure
+
+```
+library/
+├── MASTER BIAS/
+│   └── {camera}/
+│       └── masterBias_GAIN_{gain}_OFFSET_{offset}_SETTEMP_{settemp}_READOUTM_{readoutmode}.xisf
+│
+├── MASTER DARK/
+│   └── {camera}/
+│       └── masterDark_EXPOSURE_{exposure}_GAIN_{gain}_OFFSET_{offset}_SETTEMP_{settemp}_READOUTM_{readoutmode}.xisf
+│
+└── MASTER FLAT/
+    └── {camera}/
+        └── {optic}/
+            └── DATE_{YYYY-MM-DD}/
+                └── masterFlat_FILTER_{filter}_GAIN_{gain}_OFFSET_{offset}_SETTEMP_{settemp}_FOCALLEN_{focallen}_READOUTM_{readoutmode}.xisf
+```
+
+### Blink Directory Output
+
+Masters are copied to the DATE directory (not scattered across filter subdirectories):
+
+```
+blink/
+└── M31/
+    └── DATE_2024-01-15/          # <-- ALL calibration frames HERE
+        ├── masterDark_*.xisf
+        ├── masterBias_*.xisf
+        ├── masterFlat_FILTER_Ha_*.xisf
+        ├── masterFlat_FILTER_OIII_*.xisf
+        ├── FILTER_Ha/
+        │   └── light_*.fits
+        └── FILTER_OIII/
+            └── light_*.fits
+```
+
+**Rationale**: All calibration frames in one place (DATE directory) makes them easier to find and manage. Darks are shared across filter subdirectories since they're exposure-dependent, not filter-dependent.
+
+## Current Limitations
+
+### Exact DATE Matching for Flats
+
+Current implementation requires flats to have exact DATE match with lights. Future enhancements planned:
+
+- **Older flats**: Scan DATE subdirectories < light frame date and pick the most recent
+- **Newer flats**: Scan DATE subdirectories > light frame date and pick the oldest
+- **Date tolerance**: Configuration option for flat date tolerance (e.g., ±7 days)
 
 ## Repository
 
-Not yet implemented. Placeholder for future development.
+[github.com/jewzaam/ap-copy-master-to-blink](https://github.com/jewzaam/ap-copy-master-to-blink)
