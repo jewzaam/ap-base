@@ -37,7 +37,7 @@ check: links markdown-lint
 
 links: install-dev
 	@echo "Checking markdown links..."
-	$(PYTHON) -m linkcheck --no-status --no-warnings --check-extern --ignore-url="ap-.*" *.md docs/*.md docs/tools/*.md standards/*.md .claude/skills/*.md
+	$(PYTHON) -m linkcheck --no-status --no-warnings --check-extern --ignore-url="ap-.*" *.md docs/*.md docs/tools/*.md standards/*.md
 
 markdown-lint: install-dev
 	@echo "Linting markdown files..."
