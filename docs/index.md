@@ -58,10 +58,8 @@ flowchart TB
 | [ap-preserve-header](tools/ap-preserve-header.md) | Preserve path metadata in FITS headers |
 | [ap-create-master](tools/ap-create-master.md) | Generate master calibration frames |
 | [ap-move-master-to-library](tools/ap-move-master-to-library.md) | Organize calibration library |
-| [ap-copy-master-to-blink](tools/ap-copy-master-to-blink.md) | Copy masters from library to blink ⚠️ |
+| [ap-copy-master-to-blink](tools/ap-copy-master-to-blink.md) | Copy masters from library to blink |
 | [ap-move-light-to-data](tools/ap-move-light-to-data.md) | Move lights when calibration available |
-
-⚠️ Not yet implemented - placeholder documentation only
 
 ## Quick Start
 
@@ -73,10 +71,11 @@ All tools can be installed from git:
 pip install git+https://github.com/jewzaam/ap-move-raw-light-to-blink.git
 pip install git+https://github.com/jewzaam/ap-cull-light.git
 pip install git+https://github.com/jewzaam/ap-empty-directory.git
-pip install git+https://github.com/jewzaam/ap-move-lights-to-data.git
+pip install git+https://github.com/jewzaam/ap-move-light-to-data.git
 pip install git+https://github.com/jewzaam/ap-preserve-header.git
 pip install git+https://github.com/jewzaam/ap-create-master.git
 pip install git+https://github.com/jewzaam/ap-move-master-to-library.git
+pip install git+https://github.com/jewzaam/ap-copy-master-to-blink.git
 ```
 
 The `ap-common` package is installed automatically as a dependency.
@@ -85,28 +84,28 @@ The `ap-common` package is installed automatically as a dependency.
 
 ```bash
 # 1. Move light frames from raw capture to organized structure
-python -m ap_move_lights /raw/capture /data
+python -m ap_move_raw_light_to_blink /raw/capture /data
 
 # 2. Cull poor quality frames
-python -m ap_cull_lights /data/10_Blink /reject --max-hfr 2.5 --max-rms 2.0
+python -m ap_cull_light /data/10_Blink /reject --max-hfr 2.5 --max-rms 2.0
 
 # 3. Preserve path metadata in FITS headers
-python -m ap_fits_headers /data --include CAMERA OPTIC FILTER
+python -m ap_preserve_header /data --include CAMERA OPTIC FILTER
 
 # 4. Generate master calibration frames
-python -m ap_master_calibration /raw/calibration /output --pixinsight-binary "/path/to/PixInsight"
+python -m ap_create_master /raw/calibration /output --pixinsight-binary "/path/to/PixInsight"
 
 # 5. Organize calibration library
-python -m ap_move_calibration /output/master /calibration_library
+python -m ap_move_master_to_library /output/master /calibration_library
 
 # 6. Clean calibration output directory
-python -m ap_empty_directory /output --recursive
+ap-empty-directory /output --recursive
 
-# 7. Copy masters from library to blink directories (not yet implemented)
-# python -m ap_copy_masters_to_blink /calibration_library /data/equipment/10_Blink
+# 7. Copy masters from library to blink directories
+python -m ap_copy_master_to_blink /calibration_library /data/equipment/10_Blink
 
 # 8. Move lights to data when calibration available
-python -m ap_move_lights_to_data /data/equipment/10_Blink /data/equipment/20_Data
+python -m ap_move_light_to_data /data/equipment/10_Blink /data/equipment/20_Data
 ```
 
 ## Documentation

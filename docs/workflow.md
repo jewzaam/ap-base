@@ -62,7 +62,7 @@ Images are captured using NINA (Nighttime Imaging 'N' Astronomy) and saved to a 
 #### 2a. Preserve Header Metadata
 
 ```bash
-python -m ap_fits_headers <raw_dir> --include CAMERA OPTIC FILTER [options]
+python -m ap_preserve_header <raw_dir> --include CAMERA OPTIC FILTER [options]
 ```
 
 The `ap-preserve-header` tool:
@@ -76,7 +76,7 @@ The `ap-preserve-header` tool:
 #### 2b. Move Light Frames
 
 ```bash
-python -m ap_move_lights <raw_dir> <dest_dir> [options]
+python -m ap_move_raw_light_to_blink <raw_dir> <dest_dir> [options]
 ```
 
 The `ap-move-raw-light-to-blink` tool:
@@ -108,7 +108,7 @@ flowchart LR
 #### 2c. Cull Poor Quality Frames
 
 ```bash
-python -m ap_cull_lights <source_dir> <reject_dir> --max-hfr 2.5 --max-rms 2.0 [options]
+python -m ap_cull_light <source_dir> <reject_dir> --max-hfr 2.5 --max-rms 2.0 [options]
 ```
 
 The `ap-cull-light` tool:
@@ -136,7 +136,7 @@ flowchart TB
 #### 3a. Preserve Header Metadata
 
 ```bash
-python -m ap_fits_headers <raw_calibration_dir> --include CAMERA OPTIC FILTER [options]
+python -m ap_preserve_header <raw_calibration_dir> --include CAMERA OPTIC FILTER [options]
 ```
 
 Before creating master calibration frames, ensure all metadata is in FITS headers:
@@ -149,7 +149,7 @@ Before creating master calibration frames, ensure all metadata is in FITS header
 #### 3b. Generate Master Calibration Frames
 
 ```bash
-python -m ap_master_calibration <input_dir> <output_dir> --pixinsight-binary "/path/to/PixInsight" [options]
+python -m ap_create_master <input_dir> <output_dir> --pixinsight-binary "/path/to/PixInsight" [options]
 ```
 
 The `ap-create-master` tool:
@@ -192,7 +192,7 @@ flowchart TB
 #### 3c. Organize Calibration Library
 
 ```bash
-python -m ap_move_calibration <source_dir> <library_dir> [options]
+python -m ap_move_master_to_library <source_dir> <library_dir> [options]
 ```
 
 The `ap-move-master-to-library` tool organizes master frames into a library structure:
@@ -214,33 +214,34 @@ The `ap-move-master-to-library` tool organizes master frames into a library stru
 
 #### 3d. Copy Masters to Blink Directories
 
-**⚠️ Tool not yet implemented - see placeholder documentation**
-
 After organizing masters to the calibration library, copy the relevant master frames to the blink directories where light frames are located.
 
 ```bash
-python -m ap_copy_masters_to_blink <library_dir> <blink_dir> [options]
+python -m ap_copy_master_to_blink <library_dir> <blink_dir> [options]
 ```
 
-The `ap-copy-master-to-blink` tool will:
-1. Scan blink directories for light frames
-2. Identify required master frames based on metadata
-3. Search calibration library for matching masters (dark, flat, bias)
-4. Copy matching masters to appropriate blink directories
+The `ap-copy-master-to-blink` tool:
+1. Scans blink directories for light frames
+2. Identifies required master frames based on light frame metadata
+3. Searches calibration library for matching masters (dark, flat, bias)
+4. Copies matching masters to the DATE directory in blink (not scattered across filter subdirectories)
+
+**Note**: This tool is designed for the **darks library workflow** with cooled cameras where master darks are stored in a permanent library and reused across sessions.
 
 **Matching Logic**:
-- Darks: Match by camera, temp, gain, offset, readout mode, exposure
-- Flats: Above + filter, date
-- Bias: Camera, temp, gain, offset, readout mode
 
-**Current State**: This step is currently performed manually. The tool is documented in the legacy workflow as `copycalibration.py` but needs refactoring into a standalone ap-* tool.
+| Frame Type | Match Criteria |
+|------------|----------------|
+| Dark | Camera, temp, gain, offset, readout mode; exact exposure preferred, shorter + bias if not |
+| Flat | Camera, optic, filter, gain, offset, temp, readout mode, focal length; exact date required |
+| Bias | Camera, gain, offset, temp, readout mode; only copied when dark exposure < light exposure |
 
 ### Stage 4: Move Lights to Data
 
 Once calibration frames are available in the blink directories, lights can be moved to the data directory for processing.
 
 ```bash
-python -m ap_move_lights_to_data <source_dir> <dest_dir> [options]
+python -m ap_move_light_to_data <source_dir> <dest_dir> [options]
 ```
 
 The `ap-move-light-to-data` tool:
@@ -293,7 +294,7 @@ flowchart LR
 After processing, clean up working directories:
 
 ```bash
-python -m ap_empty_directory <directory> [options]
+ap-empty-directory <directory> [options]
 ```
 
 The `ap-empty-directory` tool:
@@ -306,17 +307,17 @@ The `ap-empty-directory` tool:
 
 ```bash
 # Clean calibration output directory after moving masters to library
-python -m ap_empty_directory /calibration/output --recursive
+ap-empty-directory /calibration/output --recursive
 
 # Clean raw calibration directory
 # WARNING: Only do this AFTER both:
 # 1. Integrating calibration frames (creating masters)
 # 2. Moving masters to the calibration library
 # If you skip either step, you'll need to restore or recreate the frames
-python -m ap_empty_directory /calibration/raw --recursive
+ap-empty-directory /calibration/raw --recursive
 
 # Preview cleanup before executing
-python -m ap_empty_directory /calibration/output --recursive --dryrun
+ap-empty-directory /calibration/output --recursive --dryrun
 ```
 
 ## Complete Workflow Script Example
@@ -334,36 +335,35 @@ CAL_LIBRARY="/calibration/library"
 PIXINSIGHT="/opt/PixInsight/bin/PixInsight"
 
 # Step 1: Move light frames
-python -m ap_move_lights "$RAW_DIR" "$DATA_DIR"
+python -m ap_move_raw_light_to_blink "$RAW_DIR" "$DATA_DIR"
 
 # Step 2: Cull poor quality frames
-python -m ap_cull_lights "$DATA_DIR/*/10_Blink" "$REJECT_DIR" \
+python -m ap_cull_light "$DATA_DIR/*/10_Blink" "$REJECT_DIR" \
     --max-hfr 2.5 --max-rms 2.0 --auto-accept-percent 5.0
 
 # Step 3: Preserve path metadata
-python -m ap_fits_headers "$DATA_DIR" --include CAMERA OPTIC FILTER
+python -m ap_preserve_header "$DATA_DIR" --include CAMERA OPTIC FILTER
 
 # Step 4: Generate master calibration frames
-python -m ap_master_calibration "$CAL_INPUT" "$CAL_OUTPUT" \
+python -m ap_create_master "$CAL_INPUT" "$CAL_OUTPUT" \
     --pixinsight-binary "$PIXINSIGHT"
 
 # Step 5: Organize calibration library
-python -m ap_move_calibration "$CAL_OUTPUT/master" "$CAL_LIBRARY"
+python -m ap_move_master_to_library "$CAL_OUTPUT/master" "$CAL_LIBRARY"
 
 # Step 6: Clean calibration output directory
-python -m ap_empty_directory "$CAL_OUTPUT" --recursive
+ap-empty-directory "$CAL_OUTPUT" --recursive
 
 # Step 7: Copy masters from library to blink directories
-# NOTE: Tool not yet implemented - currently done manually
-# python -m ap_copy_masters_to_blink "$CAL_LIBRARY" "$DATA_DIR/*/10_Blink"
+python -m ap_copy_master_to_blink "$CAL_LIBRARY" "$DATA_DIR/RedCat51@f4.9+ASI2600MM/10_Blink"
 
 # Step 8: Move lights to data when calibration available
-python -m ap_move_lights_to_data \
+python -m ap_move_light_to_data \
     "$DATA_DIR/RedCat51@f4.9+ASI2600MM/10_Blink" \
     "$DATA_DIR/RedCat51@f4.9+ASI2600MM/20_Data"
 
 # OPTIONAL: Clean raw calibration (only after integration AND library move!)
-# python -m ap_empty_directory "$CAL_INPUT" --recursive
+# ap-empty-directory "$CAL_INPUT" --recursive
 
 echo "Processing complete!"
 ```

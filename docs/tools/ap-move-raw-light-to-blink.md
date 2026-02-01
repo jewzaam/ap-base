@@ -15,7 +15,7 @@ pip install git+https://github.com/jewzaam/ap-move-raw-light-to-blink.git
 ## Usage
 
 ```bash
-python -m ap_move_lights <source_dir> <dest_dir> [options]
+python -m ap_move_raw_light_to_blink <source_dir> <dest_dir> [options]
 ```
 
 ### Options
@@ -60,13 +60,13 @@ The tool creates the initial stage (10_Blink). Subsequent stages are managed man
 
 ```bash
 # Preview what would be moved
-python -m ap_move_lights /capture/2026-01-29 /data/astrophotography --dryrun
+python -m ap_move_raw_light_to_blink /capture/2026-01-29 /data/astrophotography --dryrun
 
 # Move files
-python -m ap_move_lights /capture/2026-01-29 /data/astrophotography
+python -m ap_move_raw_light_to_blink /capture/2026-01-29 /data/astrophotography
 
 # Custom stage directory
-python -m ap_move_lights /capture /data --blink-dir "00_Review"
+python -m ap_move_raw_light_to_blink /capture /data --blink-dir "00_Review"
 ```
 
 ## Repository

@@ -11,13 +11,13 @@ Calibration frames are searched for in the lights directory first, then in paren
 ## Installation
 
 ```bash
-pip install git+https://github.com/jewzaam/ap-move-lights-to-data.git
+pip install git+https://github.com/jewzaam/ap-move-light-to-data.git
 ```
 
 ## Usage
 
 ```bash
-python -m ap_move_lights_to_data <source_dir> <dest_dir> [options]
+python -m ap_move_light_to_data <source_dir> <dest_dir> [options]
 ```
 
 ### Arguments
@@ -34,12 +34,12 @@ python -m ap_move_lights_to_data <source_dir> <dest_dir> [options]
 
 ```bash
 # Move lights from 10_Blink to 20_Data
-python -m ap_move_lights_to_data \
+python -m ap_move_light_to_data \
     "/data/astrophotography/RedCat51@f4.9+ASI2600MM/10_Blink" \
     "/data/astrophotography/RedCat51@f4.9+ASI2600MM/20_Data"
 
 # Dry run to see what would be moved
-python -m ap_move_lights_to_data \
+python -m ap_move_light_to_data \
     "/data/astrophotography/RedCat51@f4.9+ASI2600MM/10_Blink" \
     "/data/astrophotography/RedCat51@f4.9+ASI2600MM/20_Data" \
     --dry-run
@@ -80,4 +80,4 @@ The tool recognizes both regular and MASTER frame types:
 
 ## Repository
 
-[github.com/jewzaam/ap-move-lights-to-data](https://github.com/jewzaam/ap-move-lights-to-data)
+[github.com/jewzaam/ap-move-light-to-data](https://github.com/jewzaam/ap-move-light-to-data)

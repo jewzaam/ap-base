@@ -15,7 +15,7 @@ pip install git+https://github.com/jewzaam/ap-preserve-header.git
 ## Usage
 
 ```bash
-python -m ap_fits_headers <root_dir> --include KEY [KEY ...] [options]
+python -m ap_preserve_header <root_dir> --include KEY [KEY ...] [options]
 ```
 
 ### Options
@@ -62,20 +62,20 @@ The tool only updates headers when the value differs from the path value, making
 
 ```bash
 # Extract CAMERA and OPTIC from paths
-python -m ap_fits_headers /data --include CAMERA OPTIC
+python -m ap_preserve_header /data --include CAMERA OPTIC
 ```
 
 ### Multiple Keys
 
 ```bash
 # Extract multiple metadata keys
-python -m ap_fits_headers /data --include CAMERA OPTIC FILTER TARGET
+python -m ap_preserve_header /data --include CAMERA OPTIC FILTER TARGET
 ```
 
 ### Preview Changes
 
 ```bash
-python -m ap_fits_headers /data --include CAMERA OPTIC --dryrun
+python -m ap_preserve_header /data --include CAMERA OPTIC --dryrun
 ```
 
 ## Use Cases
@@ -94,10 +94,10 @@ Missing or modified path metadata must be written to headers before creating mas
 
 ```bash
 # 1. Write path metadata to headers
-python -m ap_fits_headers /calibration --include CAMERA OPTIC FILTER
+python -m ap_preserve_header /calibration --include CAMERA OPTIC FILTER
 
 # 2. Generate masters (metadata now in headers)
-python -m ap_master_calibration /calibration /output ...
+python -m ap_create_master /calibration /output ...
 ```
 
 ### Retroactive Processing
@@ -106,7 +106,7 @@ Can be run on existing datasets to add missing metadata:
 
 ```bash
 # Fix old datasets missing header metadata
-python -m ap_fits_headers /archive/2025 --include CAMERA OPTIC
+python -m ap_preserve_header /archive/2025 --include CAMERA OPTIC
 ```
 
 ## Repository
