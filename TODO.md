@@ -5,7 +5,9 @@
 ### Extract Master Frame Matching Logic to ap-common
 
 **Current State:**
+
 Master frame matching logic (finding darks, flats, bias) is currently duplicated across multiple projects:
+
 - `ap-copy-master-to-blink` - matching.py
 - `ap-move-master-to-library` - (likely has similar logic)
 - `ap-move-light-to-data` - (likely has similar logic)
