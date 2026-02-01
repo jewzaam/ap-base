@@ -4,7 +4,8 @@ All ap-* projects must use constants and utilities from `ap-common` rather than 
 
 ## Rationale
 
-- **Consistency** - All projects use identical values for headers, types, and patterns
+- **Consistency** - All projects use identical constant names, not just values
+- **Zero cognitive load** - Switching between projects requires no mental mapping
 - **Maintainability** - Changes propagate automatically when ap-common is updated
 - **Discoverability** - Single source of truth for all shared definitions
 
@@ -108,20 +109,26 @@ Do not do this:
 IMAGETYP = "IMAGETYP"
 LIGHT_TYPE = "LIGHT"
 
+# BAD: Aliasing to a different name
+from ap_common import HEADER_IMAGETYP
+IMAGE_TYPE_KEY = HEADER_IMAGETYP  # Don't do this
+
 # BAD: Using string literals directly
 if headers["IMAGETYP"] == "LIGHT":
     ...
 ```
 
-Instead:
+Use constants directly with their original names:
 
 ```python
-# GOOD: Import from ap_common
+# GOOD: Import and use directly
 from ap_common import HEADER_IMAGETYP, TYPE_LIGHT
 
 if headers[HEADER_IMAGETYP] == TYPE_LIGHT:
     ...
 ```
+
+The constant name `HEADER_IMAGETYP` is the same in every project. No aliases, no mappings, no project-specific names.
 
 ## Adding New Constants
 
