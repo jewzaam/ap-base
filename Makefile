@@ -1,7 +1,7 @@
 # ap-base Makefile
 # Submodule management and documentation checks
 
-.PHONY: init deinit install-dev links markdown-lint check help
+.PHONY: init deinit install-dev links markdown-lint submodule-links check help
 .DEFAULT_GOAL := check
 
 PYTHON := python
@@ -14,9 +14,10 @@ help:
 	@echo "  init           - Initialize and update all submodules"
 	@echo "  deinit         - Deinitialize submodules and clear cache (clean slate)"
 	@echo "  install-dev    - Install dev dependencies for checks"
-	@echo "  check          - Run all checks (links + markdown-lint)"
+	@echo "  check          - Run all checks (links + markdown-lint + submodule-links)"
 	@echo "  links          - Validate markdown links"
 	@echo "  markdown-lint  - Lint markdown files"
+	@echo "  submodule-links - Check for dead links to submodule files"
 
 init:
 	git submodule update --init --recursive
@@ -33,7 +34,7 @@ deinit:
 install-dev:
 	$(PYTHON) -m pip install -e ".[dev]"
 
-check: links markdown-lint
+check: links markdown-lint submodule-links
 
 links: install-dev
 	@echo "Checking markdown links..."
@@ -42,3 +43,7 @@ links: install-dev
 markdown-lint: install-dev
 	@echo "Linting markdown files..."
 	$(PYTHON) -m pymarkdown --disable-rules MD013,MD024,MD031,MD036 scan .
+
+submodule-links:
+	@echo "Checking for dead links to submodule files..."
+	$(PYTHON) scripts/check_submodule_links.py
