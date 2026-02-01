@@ -84,13 +84,13 @@ The `ap-common` package is installed automatically as a dependency.
 
 ```bash
 # 1. Move light frames from raw capture to organized structure
-python -m ap_move_raw_light_to_blink.move_lights /raw/capture /data
+python -m ap_move_raw_light_to_blink /raw/capture /data
 
 # 2. Cull poor quality frames
-python -m ap_cull_light.cull_lights /data/10_Blink /reject --max-hfr 2.5 --max-rms 2.0
+python -m ap_cull_light /data/10_Blink /reject --max-hfr 2.5 --max-rms 2.0
 
 # 3. Preserve path metadata in FITS headers
-python -m ap_preserve_header.preserve_headers /data --include CAMERA OPTIC FILTER
+python -m ap_preserve_header /data --include CAMERA OPTIC FILTER
 
 # 4. Generate master calibration frames
 python -m ap_create_master /raw/calibration /output --pixinsight-binary "/path/to/PixInsight"

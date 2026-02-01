@@ -15,7 +15,7 @@ pip install git+https://github.com/jewzaam/ap-cull-light.git
 ## Usage
 
 ```bash
-python -m ap_cull_light.cull_lights <source_dir> <reject_dir> [options]
+python -m ap_cull_light <source_dir> <reject_dir> [options]
 ```
 
 ### Options
@@ -62,14 +62,14 @@ flowchart TB
 ### Basic Culling
 
 ```bash
-python -m ap_cull_light.cull_lights /data/10_Blink /reject --max-hfr 2.5 --max-rms 2.0
+python -m ap_cull_light /data/10_Blink /reject --max-hfr 2.5 --max-rms 2.0
 ```
 
 ### With Auto-Accept
 
 ```bash
 # Auto-accept if less than 5% rejected
-python -m ap_cull_light.cull_lights /data/10_Blink /reject \
+python -m ap_cull_light /data/10_Blink /reject \
     --max-hfr 2.5 --max-rms 2.0 --auto-accept-percent 5.0
 ```
 
@@ -77,14 +77,14 @@ python -m ap_cull_light.cull_lights /data/10_Blink /reject \
 
 ```bash
 # Skip files in "accept" or "processed" directories
-python -m ap_cull_light.cull_lights /data /reject \
+python -m ap_cull_light /data /reject \
     --max-hfr 2.5 --max-rms 2.0 --skip-regex "accept|processed"
 ```
 
 ### Dry Run
 
 ```bash
-python -m ap_cull_light.cull_lights /data /reject --max-hfr 2.5 --max-rms 2.0 --dryrun
+python -m ap_cull_light /data /reject --max-hfr 2.5 --max-rms 2.0 --dryrun
 ```
 
 ## Output

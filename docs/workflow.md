@@ -62,7 +62,7 @@ Images are captured using NINA (Nighttime Imaging 'N' Astronomy) and saved to a 
 #### 2a. Preserve Header Metadata
 
 ```bash
-python -m ap_preserve_header.preserve_headers <raw_dir> --include CAMERA OPTIC FILTER [options]
+python -m ap_preserve_header <raw_dir> --include CAMERA OPTIC FILTER [options]
 ```
 
 The `ap-preserve-header` tool:
@@ -76,7 +76,7 @@ The `ap-preserve-header` tool:
 #### 2b. Move Light Frames
 
 ```bash
-python -m ap_move_raw_light_to_blink.move_lights <raw_dir> <dest_dir> [options]
+python -m ap_move_raw_light_to_blink <raw_dir> <dest_dir> [options]
 ```
 
 The `ap-move-raw-light-to-blink` tool:
@@ -108,7 +108,7 @@ flowchart LR
 #### 2c. Cull Poor Quality Frames
 
 ```bash
-python -m ap_cull_light.cull_lights <source_dir> <reject_dir> --max-hfr 2.5 --max-rms 2.0 [options]
+python -m ap_cull_light <source_dir> <reject_dir> --max-hfr 2.5 --max-rms 2.0 [options]
 ```
 
 The `ap-cull-light` tool:
@@ -136,7 +136,7 @@ flowchart TB
 #### 3a. Preserve Header Metadata
 
 ```bash
-python -m ap_preserve_header.preserve_headers <raw_calibration_dir> --include CAMERA OPTIC FILTER [options]
+python -m ap_preserve_header <raw_calibration_dir> --include CAMERA OPTIC FILTER [options]
 ```
 
 Before creating master calibration frames, ensure all metadata is in FITS headers:
@@ -335,14 +335,14 @@ CAL_LIBRARY="/calibration/library"
 PIXINSIGHT="/opt/PixInsight/bin/PixInsight"
 
 # Step 1: Move light frames
-python -m ap_move_raw_light_to_blink.move_lights "$RAW_DIR" "$DATA_DIR"
+python -m ap_move_raw_light_to_blink "$RAW_DIR" "$DATA_DIR"
 
 # Step 2: Cull poor quality frames
-python -m ap_cull_light.cull_lights "$DATA_DIR/*/10_Blink" "$REJECT_DIR" \
+python -m ap_cull_light "$DATA_DIR/*/10_Blink" "$REJECT_DIR" \
     --max-hfr 2.5 --max-rms 2.0 --auto-accept-percent 5.0
 
 # Step 3: Preserve path metadata
-python -m ap_preserve_header.preserve_headers "$DATA_DIR" --include CAMERA OPTIC FILTER
+python -m ap_preserve_header "$DATA_DIR" --include CAMERA OPTIC FILTER
 
 # Step 4: Generate master calibration frames
 python -m ap_create_master "$CAL_INPUT" "$CAL_OUTPUT" \
