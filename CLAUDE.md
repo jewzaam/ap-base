@@ -61,6 +61,7 @@ To make changes to submodules:
 
 See [standards/](standards/index.md) for detailed documentation:
 
+- [ap-common Usage](standards/ap-common-usage.md) - Use shared constants from ap-common
 - [Project Structure](standards/project-structure.md) - Directory layout and required files
 - [README Format](standards/readme-format.md) - README structure and content
 - [Makefile](standards/makefile.md) - Build targets and conventions
