@@ -122,7 +122,7 @@ def check_file(
 
 def main() -> int:
     """Main entry point."""
-    repo_root = Path(__file__).parent.parent.resolve()
+    repo_root = Path.cwd()
 
     # Get submodule paths
     submodule_paths = get_submodule_paths(repo_root)
