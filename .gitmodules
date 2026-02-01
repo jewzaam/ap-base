@@ -22,3 +22,6 @@
 [submodule "ap-empty-directory"]
 	path = ap-empty-directory
 	url = https://github.com/jewzaam/ap-empty-directory.git
+[submodule "ap-copy-master-to-blink"]
+	path = ap-copy-master-to-blink
+	url = https://github.com/jewzaam/ap-copy-master-to-blink.git
