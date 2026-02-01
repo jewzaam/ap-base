@@ -21,79 +21,25 @@ dependencies = [
 ]
 ```
 
-## Constants to Import
+## Available Constants
 
-Never define these locally. Always import from `ap_common`:
+All shared constants are defined in [`ap_common/constants.py`](../ap-common/ap_common/constants.py) and exported via `ap_common/__init__.py`.
 
-### FITS Header Keys
+Categories include:
+- FITS header keys (`HEADER_*`)
+- Normalized header names (`NORMALIZED_HEADER_*`)
+- Image type constants (`TYPE_*`)
+- Calibration type lists (`CALIBRATION_TYPES`, etc.)
+- File extensions and patterns (`FILE_EXTENSION_*`, `DEFAULT_*_PATTERN`)
+- Directory constants (`DIRECTORY_*`)
 
-| Constant | Value | Use |
-|----------|-------|-----|
-| `HEADER_DATE_OBS` | `"DATE-OBS"` | Observation timestamp |
-| `HEADER_IMAGETYP` | `"IMAGETYP"` | Frame type |
-| `HEADER_TELESCOP` | `"TELESCOP"` | Telescope/optic name |
-| `HEADER_INSTRUME` | `"INSTRUME"` | Camera/instrument |
-| `HEADER_OBJECT` | `"OBJECT"` | Target name |
-| `HEADER_FILTER` | `"FILTER"` | Filter name |
-| `HEADER_EXPOSURE` | `"EXPOSURE"` | Exposure time |
-| `HEADER_CCD_TEMP` | `"CCD-TEMP"` | Sensor temperature |
+## Usage
 
-### Normalized Header Names
-
-| Constant | Value | Use |
-|----------|-------|-----|
-| `NORMALIZED_HEADER_DATE` | `"date"` | Normalized date key |
-| `NORMALIZED_HEADER_TYPE` | `"type"` | Normalized type key |
-| `NORMALIZED_HEADER_OPTIC` | `"optic"` | Normalized optic key |
-| `NORMALIZED_HEADER_CAMERA` | `"camera"` | Normalized camera key |
-| `NORMALIZED_HEADER_FILTER` | `"filter"` | Normalized filter key |
-
-### Image Type Constants
-
-| Constant | Value | Use |
-|----------|-------|-----|
-| `TYPE_LIGHT` | `"LIGHT"` | Light frame type |
-| `TYPE_DARK` | `"DARK"` | Dark frame type |
-| `TYPE_FLAT` | `"FLAT"` | Flat frame type |
-| `TYPE_BIAS` | `"BIAS"` | Bias frame type |
-| `TYPE_MASTER_DARK` | `"MASTER DARK"` | Stacked dark |
-| `TYPE_MASTER_FLAT` | `"MASTER FLAT"` | Stacked flat |
-| `TYPE_MASTER_BIAS` | `"MASTER BIAS"` | Stacked bias |
-
-### Type Lists
-
-| Constant | Contents | Use |
-|----------|----------|-----|
-| `CALIBRATION_TYPES` | `[DARK, FLAT, BIAS]` | Raw calibration frames |
-| `MASTER_CALIBRATION_TYPES` | `[MASTER DARK, ...]` | Stacked calibration frames |
-| `ALL_CALIBRATION_TYPES` | Both lists combined | Any calibration frame |
-
-### File Extensions
-
-| Constant | Value | Use |
-|----------|-------|-----|
-| `FILE_EXTENSION_FITS` | `".fits"` | FITS file extension |
-| `FILE_EXTENSION_XISF` | `".xisf"` | XISF file extension |
-| `DEFAULT_FITS_PATTERN` | `r".*\.fits$"` | FITS file regex |
-
-### Directory Constants
-
-| Constant | Value | Use |
-|----------|-------|-----|
-| `DIRECTORY_ACCEPT` | `"accept"` | Accepted frames directory |
-
-## Import Examples
+Import constants directly from `ap_common`:
 
 ```python
-# Import specific constants
-from ap_common import (
-    HEADER_IMAGETYP,
-    TYPE_LIGHT,
-    TYPE_DARK,
-    CALIBRATION_TYPES,
-)
+from ap_common import HEADER_IMAGETYP, TYPE_LIGHT, CALIBRATION_TYPES
 
-# Use in code
 if headers[HEADER_IMAGETYP] == TYPE_LIGHT:
     process_light_frame(file)
 elif headers[HEADER_IMAGETYP] in CALIBRATION_TYPES:
