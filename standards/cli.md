@@ -47,24 +47,7 @@ The `--quiet` flag enables minimal output mode for scripting, automation, and cl
 - File logging where progress bars create unwanted artifacts
 - CI/CD pipelines with cleaner logs
 
-**Implementation:**
-
-```python
-from ap_common import setup_logging, progress_iter
-
-def main():
-    args = parse_args()
-    # Pass quiet flag to logging setup
-    logger = setup_logging(name="ap_my_tool", debug=args.debug, quiet=args.quiet)
-
-    # Progress respects quiet flag
-    for f in progress_iter(files, desc="Processing", enabled=not args.quiet):
-        process_file(f)
-
-    # Summaries respect quiet flag
-    if not args.quiet:
-        print(f"Processed {len(files)} files")
-```
+See [Logging and Progress Standards](logging-progress.md) for implementation patterns.
 
 ## Option Naming
 
