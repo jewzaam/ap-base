@@ -28,6 +28,8 @@ make default   # Same as above (explicit)
 
 ## Template
 
+> **Template file:** [templates/Makefile](templates/Makefile)
+
 ```makefile
 .PHONY: install install-dev uninstall clean format lint typecheck test test-verbose coverage default
 

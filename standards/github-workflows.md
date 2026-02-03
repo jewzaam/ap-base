@@ -2,6 +2,8 @@
 
 Standard CI workflows for ap-* projects.
 
+> **Template files:** [templates/workflows/](templates/workflows/)
+
 ## Required Workflows
 
 | Workflow | File | Trigger |

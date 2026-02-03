@@ -21,6 +21,8 @@ Standards for all ap-* astrophotography pipeline projects.
 | Template | Description |
 |----------|-------------|
 | [TEST_PLAN.md](templates/TEST_PLAN.md) | Testing strategy documentation template |
+| [Makefile](templates/Makefile) | Standard Makefile for ap-* projects |
+| [workflows/](templates/workflows/) | GitHub Actions workflow templates |
 
 ## Guiding Principles
 
