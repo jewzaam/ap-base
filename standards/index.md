@@ -12,9 +12,15 @@ Standards for all ap-* astrophotography pipeline projects.
 | [README Format](readme-format.md) | README structure and content |
 | [Makefile](makefile.md) | Build targets and conventions |
 | [GitHub Workflows](github-workflows.md) | CI/CD pipeline configuration |
-| [Testing](testing.md) | Unit testing conventions |
+| [Testing](testing.md) | Unit testing conventions, TDD, and TEST_PLAN.md requirements |
 | [CLI](cli.md) | Command-line interface conventions |
 | [Logging & Progress](logging-progress.md) | Logging, progress indicators, and output |
+
+## Templates
+
+| Template | Description |
+|----------|-------------|
+| [TEST_PLAN.md](templates/TEST_PLAN.md) | Testing strategy documentation template |
 
 ## Guiding Principles
 
