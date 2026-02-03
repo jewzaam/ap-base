@@ -23,6 +23,7 @@ ap-{verb}-{qualifier?}-{noun}-to-{destination?}
 
 | Verb | Action |
 |------|--------|
+| `copy` | Duplicate to a destination (source retained) |
 | `create` | Generate (masters from raw frames) |
 | `cull` | Filter/reject based on quality metrics |
 | `preserve` | Save metadata (e.g., path → header) |
@@ -61,7 +62,7 @@ ap-{verb}-{qualifier?}-{noun}-to-{destination?}
 | `ap-preserve-header` | verb-noun | Preserve path metadata into header |
 | `ap-create-master` | verb-noun | Create masters from raw calibration |
 | `ap-move-master-to-library` | verb-noun-to-dest | Move masters → library |
-| `ap-move-master-to-blink` | verb-noun-to-dest | Copy matching masters from library → blink |
+| `ap-copy-master-to-blink` | verb-noun-to-dest | Copy matching masters from library → blink |
 | `ap-move-light-to-data` | verb-noun-to-dest | Move accepted lights from blink → data |
 | `ap-common` | — | Shared utilities (exception to pattern) |
 
