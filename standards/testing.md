@@ -26,7 +26,6 @@ Test a single function or method in complete isolation.
 | Scope | Single function/method |
 | Dependencies | All mocked (no real I/O) |
 | Filesystem | `tmp_path` only, programmatically generated |
-| Execution time | < 100ms per test |
 | Failure meaning | Exact location of bug is known |
 
 **Example - Pure unit test:**
@@ -63,7 +62,6 @@ Test multiple components working together, verifying contracts between modules.
 | Scope | Multiple functions/modules |
 | Dependencies | Minimal mocking, real interactions |
 | Filesystem | May use real fixtures (small files) |
-| Execution time | < 10s per test |
 | Failure meaning | Something is broken, investigation needed |
 
 **Example - Integration test:**
@@ -106,20 +104,7 @@ TDD is **required** for bug fixes to existing functionality. New features follow
 3. Verify red   - Run test, confirm it FAILS
 4. Implement    - Write the minimal fix
 5. Verify green - Run test, confirm it PASSES
-6. Validate     - Revert fix, confirm test FAILS again
-7. Commit       - Commit test and fix together
-```
-
-**Step 6 is critical.** If reverting the fix does not cause the test to fail, the test does not actually validate the fix.
-
-### Validation Command Sequence
-
-```bash
-# After implementing fix, before committing:
-git stash                           # Temporarily remove fix
-pytest tests/test_module.py::test_specific_bug  # MUST FAIL
-git stash pop                       # Restore fix
-pytest tests/test_module.py::test_specific_bug  # MUST PASS
+6. Commit       - Commit test and fix together
 ```
 
 ### Bug Fix Test Documentation
