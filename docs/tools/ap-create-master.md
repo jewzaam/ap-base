@@ -21,7 +21,7 @@ pip install git+https://github.com/jewzaam/ap-create-master.git
 ## Usage
 
 ```bash
-python -m ap_master_calibration <input_dir> <output_dir> [options]
+python -m ap_create_master <input_dir> <output_dir> [options]
 ```
 
 ### Options
@@ -34,8 +34,12 @@ python -m ap_master_calibration <input_dir> <output_dir> [options]
 | `--dark-master-dir DIR` | Dark library for flat calibration |
 | `--pixinsight-binary PATH` | Path to PixInsight executable |
 | `--script-only` | Generate scripts without executing |
+| `--script-dir DIR` | Directory for scripts and logs (default: output_dir/logs) |
 | `--instance-id ID` | PixInsight instance ID (default: 123) |
 | `--no-force-exit` | Keep PixInsight open after execution |
+| `--dryrun` | Show what would be done without executing |
+| `--debug` | Enable debug logging |
+| `--quiet`, `-q` | Suppress progress output |
 
 ## Frame Grouping
 
@@ -119,11 +123,11 @@ Masters created in a run are **not used** for flat calibration in that same run.
 
 ```bash
 # Stage 1: Generate bias and dark masters
-python -m ap_master_calibration ./bias_and_darks ./masters \
+python -m ap_create_master ./bias_and_darks ./masters \
     --pixinsight-binary "/path/to/PixInsight"
 
 # Stage 2: Generate flat masters using Stage 1 outputs
-python -m ap_master_calibration ./flats ./output \
+python -m ap_create_master ./flats ./output \
     --bias-master-dir ./masters/master \
     --dark-master-dir ./masters/master \
     --pixinsight-binary "/path/to/PixInsight"
@@ -142,14 +146,14 @@ When matching library masters to flats:
 ### Basic Usage
 
 ```bash
-python -m ap_master_calibration /calibration /output \
+python -m ap_create_master /calibration /output \
     --pixinsight-binary "C:\Program Files\PixInsight\bin\PixInsight.exe"
 ```
 
 ### With Existing Library
 
 ```bash
-python -m ap_master_calibration /flats /output \
+python -m ap_create_master /flats /output \
     --bias-master-dir /library/BIAS \
     --dark-master-dir /library/DARK \
     --pixinsight-binary "/opt/PixInsight/bin/PixInsight"
@@ -158,7 +162,29 @@ python -m ap_master_calibration /flats /output \
 ### Script Only (No Execution)
 
 ```bash
-python -m ap_master_calibration /calibration /output --script-only
+python -m ap_create_master /calibration /output --script-only
+```
+
+### Dry Run
+
+```bash
+# See what would be generated without executing
+python -m ap_create_master /calibration /output --dryrun
+```
+
+### With Debug Output
+
+```bash
+python -m ap_create_master /calibration /output --debug \
+    --pixinsight-binary "C:\Program Files\PixInsight\bin\PixInsight.exe"
+```
+
+### Quiet Mode
+
+```bash
+# Minimal output
+python -m ap_create_master /calibration /output --quiet \
+    --pixinsight-binary "C:\Program Files\PixInsight\bin\PixInsight.exe"
 ```
 
 ## Troubleshooting
