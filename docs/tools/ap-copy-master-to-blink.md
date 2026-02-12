@@ -26,8 +26,10 @@ python -m ap_copy_master_to_blink <library_dir> <blink_dir> [options]
 |----------|-------------|
 | `library_dir` | Path to calibration library (supports env vars like `$VAR`) |
 | `blink_dir` | Path to blink directory tree (supports env vars) |
-| `--dry-run` | Show what would be copied without actually copying files |
+| `--dryrun` | Show what would be copied without actually copying files |
 | `--debug` | Enable debug logging |
+| `--quiet`, `-q` | Suppress progress output |
+| `--allow-bias` | Allow shorter darks with bias frames (default: only exact exposure match darks) |
 
 ### Examples
 
@@ -36,10 +38,16 @@ python -m ap_copy_master_to_blink <library_dir> <blink_dir> [options]
 python -m ap_copy_master_to_blink /calibration/library /data/10_Blink
 
 # With dry-run (show what would be copied without copying)
-python -m ap_copy_master_to_blink /calibration/library /data/10_Blink --dry-run
+python -m ap_copy_master_to_blink /calibration/library /data/10_Blink --dryrun
 
 # With debug output
 python -m ap_copy_master_to_blink /calibration/library /data/10_Blink --debug
+
+# With quiet mode (minimal output)
+python -m ap_copy_master_to_blink /calibration/library /data/10_Blink --quiet
+
+# Allow shorter darks with bias frames
+python -m ap_copy_master_to_blink /calibration/library /data/10_Blink --allow-bias
 ```
 
 ## Workflow Position
@@ -58,9 +66,12 @@ python -m ap_copy_master_to_blink /calibration/library /data/10_Blink --debug
 Priority matching (in order):
 
 1. **Exact exposure match**: Same camera, gain, offset, settemp, readoutmode, and exposure time
-2. **Shorter exposure + bias**: If no exact match, find the longest dark exposure < light exposure
+2. **Shorter exposure + bias** (requires `--allow-bias`): If no exact match, find the longest dark exposure < light exposure
    - **Requires matching bias**: Will not use shorter dark without bias
-3. **No match**: If no exact dark and no bias, skip (logged as missing)
+   - **Default behavior**: Without `--allow-bias`, only exact exposure match darks are copied
+3. **No match**: If no exact dark and no bias (or `--allow-bias` not specified), skip (logged as missing)
+
+**Note**: By default, only exact exposure match darks are copied. Use `--allow-bias` to enable shorter dark + bias frame matching.
 
 ### Flat Frames
 

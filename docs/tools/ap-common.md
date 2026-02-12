@@ -48,6 +48,22 @@ date = normalize_date("2026-01-29T12:30:00")  # "2026-01-29"
 filter_name = normalize_filterName("Luminance")  # "L"
 ```
 
+#### build_normalized_filters() - Build Normalized Filter Criteria
+
+```python
+from ap_common.normalization import build_normalized_filters
+
+# Build normalized filter criteria for matching
+filters = build_normalized_filters({
+    "camera": "ASI294MC",
+    "filter": "Ha",
+    "gain": "100"
+})
+# Returns normalized filters with None values converted to empty strings
+```
+
+Used for strict matching of calibration frames - normalizes None values to empty strings for consistent comparison.
+
 ### filesystem.py - File Operations
 
 ```python

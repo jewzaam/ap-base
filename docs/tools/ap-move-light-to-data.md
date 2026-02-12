@@ -27,8 +27,13 @@ python -m ap_move_light_to_data <source_dir> <dest_dir> [options]
 
 ### Options
 
-- `-d, --debug`: Enable debug output
-- `-n, --dry-run`: Show what would be done without actually moving files
+| Option | Description |
+|--------|-------------|
+| `-d`, `--debug` | Enable debug output |
+| `-n`, `--dryrun` | Show what would be done without moving files |
+| `-q`, `--quiet` | Suppress progress output |
+| `--allow-bias` | Allow shorter darks with bias frames (default: only exact exposure match darks) |
+| `--path-pattern REGEX` | Filter light directories by regex pattern (e.g., `"M31"`, `"FILTER_Ha"`) |
 
 ### Examples
 
@@ -42,7 +47,25 @@ python -m ap_move_light_to_data \
 python -m ap_move_light_to_data \
     "/data/astrophotography/RedCat51@f4.9+ASI2600MM/10_Blink" \
     "/data/astrophotography/RedCat51@f4.9+ASI2600MM/20_Data" \
-    --dry-run
+    --dryrun
+
+# Quiet mode (minimal output)
+python -m ap_move_light_to_data \
+    "/data/astrophotography/RedCat51@f4.9+ASI2600MM/10_Blink" \
+    "/data/astrophotography/RedCat51@f4.9+ASI2600MM/20_Data" \
+    --quiet
+
+# Process only specific target (M31)
+python -m ap_move_light_to_data \
+    "/data/astrophotography/RedCat51@f4.9+ASI2600MM/10_Blink" \
+    "/data/astrophotography/RedCat51@f4.9+ASI2600MM/20_Data" \
+    --path-pattern "M31"
+
+# Process only Ha filter
+python -m ap_move_light_to_data \
+    "/data/astrophotography/RedCat51@f4.9+ASI2600MM/10_Blink" \
+    "/data/astrophotography/RedCat51@f4.9+ASI2600MM/20_Data" \
+    --path-pattern "FILTER_Ha"
 ```
 
 ## Calibration Requirements
@@ -66,10 +89,29 @@ Lights are only moved when calibration frames are found (in the lights directory
 
 ### Bias Requirement
 
-Bias frames are **only required** when the dark exposure time does not match the light exposure time. This is because darks with mismatched exposure times need bias subtraction for proper scaling.
+Bias frames are **only required** when the dark exposure time does not match the light exposure time and `--allow-bias` is specified. This is because darks with mismatched exposure times need bias subtraction for proper scaling.
 
-- If dark exposure matches light exposure: **No bias required**
-- If dark exposure differs from light exposure: **Bias required**
+- **Default behavior**: Without `--allow-bias`, only exact exposure match darks are used
+- **With `--allow-bias`**:
+  - If dark exposure matches light exposure: **No bias required**
+  - If dark exposure differs from light exposure: **Bias required**
+
+## Path Pattern Filtering
+
+Use `--path-pattern` to process only specific targets or filters:
+
+```bash
+# Process only M31 target
+python -m ap_move_light_to_data 10_Blink 20_Data --path-pattern "M31"
+
+# Process only Ha filter
+python -m ap_move_light_to_data 10_Blink 20_Data --path-pattern "FILTER_Ha"
+
+# Process multiple patterns (regex OR)
+python -m ap_move_light_to_data 10_Blink 20_Data --path-pattern "M31|M42"
+```
+
+The pattern is matched against the full directory path, allowing flexible filtering by target name, filter, date, or any other path component.
 
 ## Frame Type Support
 
