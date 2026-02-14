@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check that markdown files in docs/ and standards/ don't link to submodule files.
+"""Check that markdown files in docs/ don't link to submodule files.
 
 Links to files inside submodules will be dead links when viewed on GitHub
 because submodules appear as references to other repositories, not directories.
@@ -130,8 +130,8 @@ def main() -> int:
         print("No submodules found in .gitmodules")
         return 0
 
-    # Find markdown files to check in docs/ and standards/
-    dirs_to_check = ["docs", "standards"]
+    # Find markdown files to check in docs/
+    dirs_to_check = ["docs"]
     md_files: list[Path] = []
 
     for dir_name in dirs_to_check:
