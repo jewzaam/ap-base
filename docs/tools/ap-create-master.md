@@ -9,7 +9,7 @@ Automated generation of master calibration frames using PixInsight.
 ## Installation
 
 ```bash
-pip install git+https://github.com/jewzaam/ap-create-master.git
+python -m pip install git+https://github.com/jewzaam/ap-create-master.git
 ```
 
 ## Requirements

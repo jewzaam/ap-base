@@ -15,7 +15,7 @@ Shared utilities package for astrophotography tools.
 ## Installation
 
 ```bash
-pip install git+https://github.com/jewzaam/ap-common.git
+python -m pip install git+https://github.com/jewzaam/ap-common.git
 ```
 
 ## Modules

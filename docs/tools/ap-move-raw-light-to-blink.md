@@ -9,7 +9,7 @@ Move and organize light frames from raw capture to organized directory structure
 ## Installation
 
 ```bash
-pip install git+https://github.com/jewzaam/ap-move-raw-light-to-blink.git
+python -m pip install git+https://github.com/jewzaam/ap-move-raw-light-to-blink.git
 ```
 
 ## Usage

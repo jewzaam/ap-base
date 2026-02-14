@@ -9,7 +9,7 @@ Quality control filtering for light frames based on HFR and RMS thresholds.
 ## Installation
 
 ```bash
-pip install git+https://github.com/jewzaam/ap-cull-light.git
+python -m pip install git+https://github.com/jewzaam/ap-cull-light.git
 ```
 
 ## Usage
