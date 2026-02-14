@@ -263,7 +263,7 @@ Create comprehensive integration tests that verify the complete workflow with em
 3. Add integration test to ap-move-light-to-data
 4. Add integration test to ap-create-master
 5. Add unit tests for empty filter in all matching functions
-6. Document expected behavior in standards/
+6. Document expected behavior in standards/standards/
 
 **Benefits:**
 - Confidence that filterless imaging workflows work correctly

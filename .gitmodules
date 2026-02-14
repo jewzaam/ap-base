@@ -25,3 +25,6 @@
 [submodule "ap-copy-master-to-blink"]
 	path = ap-copy-master-to-blink
 	url = https://github.com/jewzaam/ap-copy-master-to-blink.git
+[submodule "standards"]
+	path = standards
+	url = https://github.com/jewzaam/standards.git

@@ -21,7 +21,7 @@ ap-base/
 ├── ap-move-raw-light-to-blink/  # Light frame organization
 ├── ap-preserve-header/          # FITS header management
 ├── docs/                # Centralized documentation
-├── standards/           # Project standards documentation
+├── standards/           # Project standards submodule
 ├── Makefile             # Development and validation targets
 ├── CLAUDE.md            # This file (workflow instructions)
 └── .gitmodules          # Submodule configuration
@@ -59,15 +59,15 @@ To make changes to submodules:
 
 ## Project Standards
 
-See [standards/](standards/index.md) for detailed documentation:
+See [standards/](standards/standards/index.md) for detailed documentation:
 
-- [ap-common Usage](standards/ap-common-usage.md) - Use shared constants from ap-common
-- [Project Structure](standards/project-structure.md) - Directory layout and required files
-- [README Format](standards/readme-format.md) - README structure and content
-- [Makefile](standards/makefile.md) - Build targets and conventions
-- [GitHub Workflows](standards/github-workflows.md) - CI/CD configuration
-- [Testing](standards/testing.md) - Unit testing conventions
-- [CLI](standards/cli.md) - Command-line interface conventions
+- [ap-common Usage](standards/standards/ap-common-usage.md) - Use shared constants from ap-common
+- [Project Structure](standards/standards/project-structure.md) - Directory layout and required files
+- [README Format](standards/standards/readme-format.md) - README structure and content
+- [Makefile](standards/standards/makefile.md) - Build targets and conventions
+- [GitHub Workflows](standards/standards/github-workflows.md) - CI/CD configuration
+- [Testing](standards/standards/testing.md) - Unit testing conventions
+- [CLI](standards/standards/cli.md) - Command-line interface conventions
 
 ## Working with Submodules
 

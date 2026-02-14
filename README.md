@@ -23,7 +23,7 @@ ap-base/
 ├── ap-move-raw-light-to-blink/  # Light frame organization
 ├── ap-preserve-header/          # FITS header management
 ├── docs/                   # Centralized documentation
-├── standards/              # Project standards and conventions
+├── standards/              # Project standards submodule
 ├── Makefile                # Submodule management
 └── CLAUDE.md               # Claude Code workflow instructions
 ```
@@ -52,23 +52,23 @@ make init    # Reinitialize fresh submodules
 
 ## Working with Standards
 
-Standards are defined in the `standards/` directory and apply to all submodule projects:
+Standards are defined in the `standards/standards/` directory and apply to all submodule projects:
 
-- [Project Structure](standards/project-structure.md) - Directory layout and required files
-- [README Format](standards/readme-format.md) - README structure and content
-- [Makefile](standards/makefile.md) - Build targets and conventions
-- [GitHub Workflows](standards/github-workflows.md) - CI/CD configuration
-- [Testing](standards/testing.md) - Unit testing conventions
-- [CLI](standards/cli.md) - Command-line interface conventions
-- [Naming Conventions](standards/naming.md) - File and variable naming
+- [Project Structure](standards/standards/project-structure.md) - Directory layout and required files
+- [README Format](standards/standards/readme-format.md) - README structure and content
+- [Makefile](standards/standards/makefile.md) - Build targets and conventions
+- [GitHub Workflows](standards/standards/github-workflows.md) - CI/CD configuration
+- [Testing](standards/standards/testing.md) - Unit testing conventions
+- [CLI](standards/standards/cli.md) - Command-line interface conventions
+- [Naming Conventions](standards/standards/naming.md) - File and variable naming
 
-See [standards/index.md](standards/index.md) for the complete standards documentation.
+See [standards/index.md](standards/standards/index.md) for the complete standards documentation.
 
 ### Enforcing Standards
 
 When making changes to submodule projects:
 
-1. Review relevant standards in `standards/`
+1. Review relevant standards in `standards/standards/`
 2. Ensure changes conform to established conventions
 3. Update standards documentation if introducing new patterns
 4. Apply changes consistently across all affected submodules
@@ -95,7 +95,7 @@ make init
 
 # Make changes to each submodule's README
 cd ap-common
-# Edit README.md to match standards/readme-format.md
+# Edit README.md to match standards/standards/readme-format.md
 git add README.md
 git commit -m "Update README to match ap-base standards"
 git push
