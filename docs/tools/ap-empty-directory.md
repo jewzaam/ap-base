@@ -21,7 +21,7 @@ This tool is used to clean up intermediate calibration files that are not moved 
 ## Installation
 
 ```bash
-pip install git+https://github.com/jewzaam/ap-empty-directory.git
+python -m pip install git+https://github.com/jewzaam/ap-empty-directory.git
 ```
 
 ## Usage

@@ -11,7 +11,7 @@ Calibration frames are searched for in the lights directory first, then in paren
 ## Installation
 
 ```bash
-pip install git+https://github.com/jewzaam/ap-move-light-to-data.git
+python -m pip install git+https://github.com/jewzaam/ap-move-light-to-data.git
 ```
 
 ## Usage

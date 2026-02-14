@@ -68,14 +68,14 @@ flowchart TB
 All tools can be installed from git:
 
 ```bash
-pip install git+https://github.com/jewzaam/ap-move-raw-light-to-blink.git
-pip install git+https://github.com/jewzaam/ap-cull-light.git
-pip install git+https://github.com/jewzaam/ap-empty-directory.git
-pip install git+https://github.com/jewzaam/ap-move-light-to-data.git
-pip install git+https://github.com/jewzaam/ap-preserve-header.git
-pip install git+https://github.com/jewzaam/ap-create-master.git
-pip install git+https://github.com/jewzaam/ap-move-master-to-library.git
-pip install git+https://github.com/jewzaam/ap-copy-master-to-blink.git
+python -m pip install git+https://github.com/jewzaam/ap-move-raw-light-to-blink.git
+python -m pip install git+https://github.com/jewzaam/ap-cull-light.git
+python -m pip install git+https://github.com/jewzaam/ap-empty-directory.git
+python -m pip install git+https://github.com/jewzaam/ap-move-light-to-data.git
+python -m pip install git+https://github.com/jewzaam/ap-preserve-header.git
+python -m pip install git+https://github.com/jewzaam/ap-create-master.git
+python -m pip install git+https://github.com/jewzaam/ap-move-master-to-library.git
+python -m pip install git+https://github.com/jewzaam/ap-copy-master-to-blink.git
 ```
 
 The `ap-common` package is installed automatically as a dependency.

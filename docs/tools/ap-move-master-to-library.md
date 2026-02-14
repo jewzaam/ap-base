@@ -9,7 +9,7 @@ Organize master calibration frames into a structured library.
 ## Installation
 
 ```bash
-pip install git+https://github.com/jewzaam/ap-move-master-to-library.git
+python -m pip install git+https://github.com/jewzaam/ap-move-master-to-library.git
 ```
 
 ## Usage

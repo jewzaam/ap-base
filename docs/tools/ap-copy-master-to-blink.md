@@ -11,7 +11,7 @@ Copy master calibration frames from library to blink directories where light fra
 ## Installation
 
 ```bash
-pip install git+https://github.com/jewzaam/ap-copy-master-to-blink.git
+python -m pip install git+https://github.com/jewzaam/ap-copy-master-to-blink.git
 ```
 
 ## Usage

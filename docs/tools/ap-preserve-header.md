@@ -9,7 +9,7 @@ Preserve metadata from file paths into FITS/XISF headers.
 ## Installation
 
 ```bash
-pip install git+https://github.com/jewzaam/ap-preserve-header.git
+python -m pip install git+https://github.com/jewzaam/ap-preserve-header.git
 ```
 
 ## Usage
