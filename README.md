@@ -15,6 +15,7 @@ This repository serves three primary functions:
 ```text
 ap-base/
 ├── ap-common/                   # Shared utilities and common code
+├── ap-copy-master-to-blink/     # Master calibration frame distribution
 ├── ap-cull-light/               # Light frame selection/culling
 ├── ap-create-master/            # Master calibration frame creation
 ├── ap-empty-directory/          # Directory cleanup utility
