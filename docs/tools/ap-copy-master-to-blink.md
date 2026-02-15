@@ -61,6 +61,18 @@ python -m ap_copy_master_to_blink /calibration/library /data/10_Blink --scale-da
 
 ## Master Frame Matching
 
+### Library Search Behavior
+
+Library searches read **actual FITS headers** from calibration files, not path structure.
+
+**Why this matters**:
+- Library directories use bare equipment names (e.g., `ATR585M/SQA55`) without KEY_VALUE encoding
+- Unlike blink directories (`{optic}@f{ratio}+{camera}`), library paths don't encode all metadata
+- Files are searched with `profileFromPath=False` to ensure camera, optic, filter, gain, offset, etc. come from FITS headers
+- Path-based metadata (like `DATE_2026-02-07`) still overrides file headers where present
+
+**Technical detail**: This uses the `profileFromPath=False` parameter when calling `ap_common` calibration utilities. See regression tests in `tests/test_matching.py::TestLibraryProfileFromPath` for implementation details.
+
 ### Dark Frames
 
 Priority matching (in order):

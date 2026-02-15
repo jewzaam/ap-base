@@ -109,7 +109,7 @@ NOTE: Missing keywords are ignored, but try to only have something like `READOUT
 ```
 output_dir/
 ├── master/
-│   ├── masterBias_INSTRUME_ASI294MC_SET-TEMP_-10_GAIN_100_OFFSET_10.xisf
+│   ├── masterBias_INSTRUME_ASI294MC_SETTEMP_-10_GAIN_100_OFFSET_10.xisf
 │   ├── masterDark_..._EXPOSURE_300.xisf
 │   └── masterFlat_..._DATE-OBS_2026-01-29_FILTER_L.xisf
 └── logs/
@@ -194,7 +194,7 @@ python -m ap_create_master /calibration /output --quiet \
 - Verify file extensions (.fit, .fits, .xisf)
 
 **No matching master for flat:**
-- Masters must match: INSTRUME, SET-TEMP, GAIN, OFFSET, READOUTM
+- Masters must match: INSTRUME, SETTEMP, GAIN, OFFSET, READOUTM
 - Date and filter differences are expected
 
 **PixInsight fails:**
