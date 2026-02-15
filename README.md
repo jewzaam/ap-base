@@ -27,6 +27,7 @@ ap-base/
 ├── ap-move-raw-light-to-blink/  # Light frame organization
 ├── ap-preserve-header/          # FITS header management
 ├── docs/                   # Centralized documentation
+├── templates/              # Batch script templates for workflow automation
 ├── standards/              # Project standards submodule
 ├── Makefile                # Submodule management
 └── CLAUDE.md               # Claude Code workflow instructions
