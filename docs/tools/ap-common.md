@@ -106,6 +106,101 @@ name = camelCase("FILTER_NAME")  # "filterName"
 files = get_filenames(["/data"], patterns=[r".*\.fits$", r".*\.xisf$"])
 ```
 
+### calibration.py - Calibration Frame Matching
+
+```python
+from ap_common.calibration import find_matching_darks, find_matching_flats, find_matching_bias
+
+# Find matching dark frames in a library directory
+darks = find_matching_darks(
+    search_dir="/calibration/library/MASTER DARK",
+    reference={"camera": "ASI294MC", "gain": "100", "offset": "10", "settemp": "-10"},
+    match_fields=["camera", "gain", "offset", "settemp", "readoutmode"],
+    allow_shorter_exposure=False,
+    profileFromPath=False,
+)
+
+# Find matching flat frames
+flats = find_matching_flats(
+    search_dir="/calibration/library/MASTER FLAT",
+    reference={"camera": "ASI294MC", "filter": "Ha", "gain": "100"},
+    match_fields=["camera", "filter", "gain", "offset", "settemp", "readoutmode", "focallen"],
+    profileFromPath=False,
+)
+
+# Find matching bias frames
+biases = find_matching_bias(
+    search_dir="/calibration/library/MASTER BIAS",
+    reference={"camera": "ASI294MC", "gain": "100", "offset": "10"},
+    match_fields=["camera", "gain", "offset", "settemp", "readoutmode"],
+    profileFromPath=False,
+)
+```
+
+Cache-based variants are also available for matching against pre-loaded metadata:
+
+```python
+from ap_common.calibration import find_matching_darks_from_cache
+
+darks = find_matching_darks_from_cache(
+    metadata_dict=cached_metadata,
+    reference=light_headers,
+    match_fields=["camera", "gain", "offset", "settemp", "readoutmode"],
+)
+```
+
+### constants.py - Shared Constants
+
+Single source of truth for constants used across all ap-* tools.
+
+```python
+from ap_common.constants import (
+    # FITS header key names
+    HEADER_DATE_OBS, HEADER_IMAGETYP, HEADER_INSTRUME, HEADER_FILTER,
+    HEADER_EXPOSURE, HEADER_GAIN, HEADER_OFFSET, HEADER_READOUTM,
+    # Normalized header names
+    NORMALIZED_HEADER_CAMERA, NORMALIZED_HEADER_FILTER, NORMALIZED_HEADER_DATE,
+    NORMALIZED_HEADER_GAIN, NORMALIZED_HEADER_OFFSET, NORMALIZED_HEADER_READOUTMODE,
+    # Image type constants
+    TYPE_LIGHT, TYPE_DARK, TYPE_FLAT, TYPE_BIAS,
+    TYPE_MASTER_DARK, TYPE_MASTER_FLAT, TYPE_MASTER_BIAS,
+    CALIBRATION_TYPES, MASTER_CALIBRATION_TYPES,
+    # File extension constants
+    FILE_EXTENSION_FITS, FILE_EXTENSION_XISF,
+    DEFAULT_FITS_PATTERN, DEFAULT_XISF_PATTERN, DEFAULT_IMAGE_PATTERNS,
+    # Directory constants
+    DIRECTORY_ACCEPT,
+)
+```
+
+### logging_config.py - Logging Configuration
+
+```python
+from ap_common.logging_config import setup_logging, get_logger
+
+# Set up logging with debug or quiet mode
+logger = setup_logging(name="ap_my_tool", debug=False, quiet=False)
+
+# Get or create a logger by name
+logger = get_logger("ap_my_tool")
+```
+
+### progress.py - Progress Utilities
+
+```python
+from ap_common.progress import progress_iter, ProgressTracker
+
+# Wrap an iterable with a progress bar
+for item in progress_iter(file_list, desc="Processing", unit="files", enabled=True):
+    process(item)
+
+# Manual progress tracking with context manager
+with ProgressTracker(total=len(items), desc="Copying", unit="files") as tracker:
+    for item in items:
+        copy(item)
+        tracker.update(1)
+```
+
 ## Normalization Data
 
 The package includes normalization mappings for:
