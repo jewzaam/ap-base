@@ -24,6 +24,7 @@ python -m ap_preserve_header <root_dir> --include KEY [KEY ...] [options]
 |--------|-------------|
 | `root_dir` | Directory to scan recursively |
 | `--include KEY ...` | Keys to extract and write (required) |
+| `--quiet`, `-q` | Suppress non-essential output (progress, INFO logs, summaries) |
 | `--debug` | Enable debug output |
 | `--dryrun` | Preview without modifying files |
 

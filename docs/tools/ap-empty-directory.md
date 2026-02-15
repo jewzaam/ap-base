@@ -46,6 +46,7 @@ python -m ap_empty_directory /path/to/blink --recursive --exclude-regex '\.keep'
 |--------|-------|-------------|
 | `--recursive` | `-r` | Recursively delete files in subdirectories |
 | `--exclude-regex` | `-e` | Exclude files matching the pattern from deletion |
+| `--quiet` | `-q` | Suppress non-essential output (progress, INFO logs, summaries) |
 | `--dryrun` | `-n` | Show what would be deleted without deleting |
 | `--debug` | `-d` | Enable debug output |
 

@@ -24,6 +24,7 @@ python -m ap_move_raw_light_to_blink <source_dir> <dest_dir> [options]
 |--------|-------------|
 | `source_dir` | Source directory containing raw files |
 | `dest_dir` | Destination directory for organized files |
+| `--quiet`, `-q` | Suppress non-essential output (progress, INFO logs, summaries) |
 | `--debug` | Enable debug output |
 | `--dryrun` | Preview changes without moving files |
 | `--blink-dir DIR` | Stage directory name (default: "10_Blink") |
