@@ -27,6 +27,7 @@ ap-base/
 ├── ap-move-raw-light-to-blink/  # Light frame organization
 ├── ap-preserve-header/          # FITS header management
 ├── docs/                   # Centralized documentation
+├── templates/              # Batch script templates for workflow automation
 ├── standards/              # Project standards submodule
 ├── Makefile                # Submodule management
 └── CLAUDE.md               # Claude Code workflow instructions
@@ -120,6 +121,7 @@ git push
 Centralized documentation lives in `docs/`:
 
 - [Documentation Index](docs/index.md) - Overview of available documentation
+- [Quick Start](docs/quick-start.md) - Set up batch scripts for the processing workflow
 - [Directory Structure](docs/directory-structure.md) - Pipeline directory layout
 - [Workflow](docs/workflow.md) - Processing workflow documentation
 - [Tools](docs/tools/) - Tool-specific documentation
