@@ -24,6 +24,7 @@ python -m ap_move_master_to_library <source_dir> <dest_dir> [options]
 |--------|-------------|
 | `source_dir` | Directory containing master frames |
 | `dest_dir` | Destination library directory |
+| `--quiet`, `-q` | Suppress non-essential output (progress, INFO logs, summaries) |
 | `--debug` | Enable debug output |
 | `--dryrun` | Preview without copying |
 | `--no-overwrite` | Fail if destination exists |

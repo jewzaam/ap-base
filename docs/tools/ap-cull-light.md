@@ -28,6 +28,7 @@ python -m ap_cull_light <source_dir> <reject_dir> [options]
 | `--max-rms FLOAT` | Maximum RMS threshold (arcsec) |
 | `--auto-accept-percent FLOAT` | Auto-accept if rejection % below this |
 | `--skip-regex REGEX` | Skip files matching pattern |
+| `--quiet`, `-q` | Suppress non-essential output (progress, INFO logs, summaries) |
 | `--debug` | Enable debug output |
 | `--dryrun` | Preview without moving files |
 
