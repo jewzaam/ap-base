@@ -215,7 +215,8 @@ flowchart TB
     classDef masterStyle fill:#80deea,stroke:#00acc1,stroke-width:2px,color:#000
 
     class META,L_ORG,L_QC,C_INT,C_LIB,MATCH,MOVE processStyle
-    class RAW,L_REVIEW manualStyle
+    class RAW rawStyle
+    class L_REVIEW manualStyle
     class READY masterStyle
 ```
 
@@ -254,7 +255,8 @@ flowchart LR
     classDef masterStyle fill:#80deea,stroke:#00acc1,stroke-width:2px,color:#000
 
     class META,L_ORG,L_QC,C_INT,C_LIB,MATCH,MOVE processStyle
-    class RAW,L_REVIEW manualStyle
+    class RAW rawStyle
+    class L_REVIEW manualStyle
     class READY masterStyle
 ```
 
@@ -346,4 +348,106 @@ flowchart LR
     class CAPTURE,BLINK manualStyle
     class RAW,LIBRARY rawStyle
     class READY masterStyle
+```
+
+---
+
+## Workflow Overview
+
+Full workflow with all tools and data nodes. Covers capture through to 30_Master.
+
+**Top-Down**
+
+```mermaid
+flowchart TB
+    subgraph Stage1["Stage 1: Capture"]
+        NINA[NINA Capture] --> RAW_Light[Raw Lights]
+        NINA --> RAW_Cal[Raw Calibration]
+    end
+
+    subgraph Stage2["Stage 2: Light Processing"]
+        RAW_Light --> PH_L[ap-preserve-header]
+        PH_L --> MOVE[ap-move-raw-light-to-blink]
+        MOVE --> BLINK[10_Blink Directory]
+        BLINK --> CULL[ap-cull-light]
+        CULL --> REJECT[Reject Directory]
+        CULL --> MANUAL[Manual Blink Review]
+        MANUAL --> ACCEPT[Accept Directory]
+    end
+
+    subgraph Stage3["Stage 3: Calibration Processing"]
+        RAW_Cal --> PH_C[ap-preserve-header]
+        PH_C --> MASTER[ap-create-master]
+        MASTER --> MASTERS[Master Frames]
+        MASTERS --> ORGANIZE[ap-move-master-to-library]
+        ORGANIZE --> LIBRARY[Calibration Library]
+        ORGANIZE --> CLEANUP1[ap-empty-directory]
+    end
+
+    subgraph Stage4["Stage 4: Match & Move"]
+        ACCEPT --> COPY_CAL[ap-copy-master-to-blink]
+        LIBRARY --> COPY_CAL
+        COPY_CAL --> MOVE_DATA[ap-move-light-to-data]
+        MOVE_DATA --> DATA[20_Data]
+    end
+
+    classDef rawStyle fill:#bcaaa4,stroke:#795548,stroke-width:2px,color:#000
+    classDef processStyle fill:#e1f5ff,stroke:#0066cc,stroke-width:2px
+    classDef manualStyle fill:#fff4e6,stroke:#ff9800,stroke-width:2px
+    classDef blinkStyle fill:#ffcc80,stroke:#ff9800,stroke-width:2px,color:#000
+    classDef dataStage fill:#fff176,stroke:#f9a825,stroke-width:2px,color:#000
+
+    class PH_L,MOVE,CULL,PH_C,MASTER,ORGANIZE,COPY_CAL,MOVE_DATA,CLEANUP1 processStyle
+    class NINA,MANUAL manualStyle
+    class RAW_Light,RAW_Cal,REJECT,ACCEPT,MASTERS,LIBRARY rawStyle
+    class BLINK blinkStyle
+    class DATA dataStage
+```
+
+**Left-Right**
+
+```mermaid
+flowchart LR
+    subgraph Stage1["Stage 1: Capture"]
+        NINA[NINA Capture] --> RAW_Light[Raw Lights]
+        NINA --> RAW_Cal[Raw Calibration]
+    end
+
+    subgraph Stage2["Stage 2: Light Processing"]
+        RAW_Light --> PH_L[ap-preserve-header]
+        PH_L --> MOVE[ap-move-raw-light-to-blink]
+        MOVE --> BLINK[10_Blink Directory]
+        BLINK --> CULL[ap-cull-light]
+        CULL --> REJECT[Reject Directory]
+        CULL --> MANUAL[Manual Blink Review]
+        MANUAL --> ACCEPT[Accept Directory]
+    end
+
+    subgraph Stage3["Stage 3: Calibration Processing"]
+        RAW_Cal --> PH_C[ap-preserve-header]
+        PH_C --> MASTER[ap-create-master]
+        MASTER --> MASTERS[Master Frames]
+        MASTERS --> ORGANIZE[ap-move-master-to-library]
+        ORGANIZE --> LIBRARY[Calibration Library]
+        ORGANIZE --> CLEANUP1[ap-empty-directory]
+    end
+
+    subgraph Stage4["Stage 4: Match & Move"]
+        ACCEPT --> COPY_CAL[ap-copy-master-to-blink]
+        LIBRARY --> COPY_CAL
+        COPY_CAL --> MOVE_DATA[ap-move-light-to-data]
+        MOVE_DATA --> DATA[20_Data]
+    end
+
+    classDef rawStyle fill:#bcaaa4,stroke:#795548,stroke-width:2px,color:#000
+    classDef processStyle fill:#e1f5ff,stroke:#0066cc,stroke-width:2px
+    classDef manualStyle fill:#fff4e6,stroke:#ff9800,stroke-width:2px
+    classDef blinkStyle fill:#ffcc80,stroke:#ff9800,stroke-width:2px,color:#000
+    classDef dataStage fill:#fff176,stroke:#f9a825,stroke-width:2px,color:#000
+
+    class PH_L,MOVE,CULL,PH_C,MASTER,ORGANIZE,COPY_CAL,MOVE_DATA,CLEANUP1 processStyle
+    class NINA,MANUAL manualStyle
+    class RAW_Light,RAW_Cal,REJECT,ACCEPT,MASTERS,LIBRARY rawStyle
+    class BLINK blinkStyle
+    class DATA dataStage
 ```
