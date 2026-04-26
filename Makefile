@@ -32,7 +32,7 @@ deinit:
 	@echo "Submodules fully cleaned. Run 'make init' to reinitialize."
 
 install-dev:
-	$(PYTHON) -m pip install -e ".[dev]"
+	$(PYTHON) -m pip install linkchecker pymarkdownlnt
 
 check: links markdown-lint submodule-links
 

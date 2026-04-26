@@ -26,8 +26,7 @@ ap-base/
 ├── ap-move-master-to-library/   # Calibration frame organization
 ├── ap-move-raw-light-to-blink/  # Light frame organization
 ├── ap-preserve-header/          # FITS header management
-├── docs/                   # Centralized documentation
-├── standards/              # Project standards submodule
+├── docs/                   # Centralized documentation (includes docs/standards/)
 ├── Makefile                # Submodule management
 └── CLAUDE.md               # Claude Code workflow instructions
 ```
@@ -56,23 +55,17 @@ make init    # Reinitialize fresh submodules
 
 ## Working with Standards
 
-Standards are defined in the `standards/standards/` directory and apply to all submodule projects:
+AP-specific standards live in [`docs/standards/`](docs/standards/index.md):
 
-- [Project Structure](standards/standards/project-structure.md) - Directory layout and required files
-- [README Format](standards/standards/readme-format.md) - README structure and content
-- [Makefile](standards/standards/makefile.md) - Build targets and conventions
-- [GitHub Workflows](standards/standards/github-workflows.md) - CI/CD configuration
-- [Testing](standards/standards/testing.md) - Unit testing conventions
-- [CLI](standards/standards/cli.md) - Command-line interface conventions
-- [Naming Conventions](standards/standards/naming.md) - File and variable naming
+- [ap-common Usage](docs/standards/ap-common-usage.md) - Use shared constants from ap-common
 
-See [standards/index.md](standards/standards/index.md) for the complete standards documentation.
+For general software-engineering standards (project structure, README format, Makefile, GitHub workflows, testing, CLI, naming, etc.), see [jewzaam/standards](https://github.com/jewzaam/standards).
 
 ### Enforcing Standards
 
 When making changes to submodule projects:
 
-1. Review relevant standards in `standards/standards/`
+1. Review AP-specific standards in [`docs/standards/`](docs/standards/index.md) and general standards at [jewzaam/standards](https://github.com/jewzaam/standards)
 2. Ensure changes conform to established conventions
 3. Update standards documentation if introducing new patterns
 4. Apply changes consistently across all affected submodules
@@ -99,7 +92,7 @@ make init
 
 # Make changes to each submodule's README
 cd ap-common
-# Edit README.md to match standards/standards/readme-format.md
+# Edit README.md to match the README format standard at https://github.com/jewzaam/standards
 git add README.md
 git commit -m "Update README to match ap-base standards"
 git push

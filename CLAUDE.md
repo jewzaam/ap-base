@@ -21,8 +21,7 @@ ap-base/
 ├── ap-move-master-to-library/   # Calibration frame organization
 ├── ap-move-raw-light-to-blink/  # Light frame organization
 ├── ap-preserve-header/          # FITS header management
-├── docs/                # Centralized documentation
-├── standards/           # Project standards submodule
+├── docs/                # Centralized documentation (includes docs/standards/)
 ├── Makefile             # Development and validation targets
 ├── CLAUDE.md            # This file (workflow instructions)
 └── .gitmodules          # Submodule configuration
@@ -60,15 +59,11 @@ To make changes to submodules:
 
 ## Project Standards
 
-See [standards/](standards/standards/index.md) for detailed documentation:
+AP-specific standards live in [docs/standards/](docs/standards/index.md):
 
-- [ap-common Usage](standards/standards/ap-common-usage.md) - Use shared constants from ap-common
-- [Project Structure](standards/standards/project-structure.md) - Directory layout and required files
-- [README Format](standards/standards/readme-format.md) - README structure and content
-- [Makefile](standards/standards/makefile.md) - Build targets and conventions
-- [GitHub Workflows](standards/standards/github-workflows.md) - CI/CD configuration
-- [Testing](standards/standards/testing.md) - Unit testing conventions
-- [CLI](standards/standards/cli.md) - Command-line interface conventions
+- [ap-common Usage](docs/standards/ap-common-usage.md) - Use shared constants from ap-common
+
+For general software-engineering standards (Python style, naming, project structure, Makefile, GitHub workflows, testing, CLI, versioning, etc.), see [jewzaam/standards](https://github.com/jewzaam/standards).
 
 ## Working with Submodules
 
