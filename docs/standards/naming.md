@@ -31,6 +31,7 @@ ap-{verb}-{qualifier?}-{noun}-to-{destination?}
 | `preserve` | Save metadata (e.g., path → header) |
 | `move` | Transfer from one location to another |
 | `delete` | Remove files/frames |
+| `discover` | Infer missing metadata and record it (e.g., target name from RA/DEC) |
 | `empty` | Clean up (e.g., remove empty directories) |
 
 ### Nouns
@@ -40,6 +41,8 @@ ap-{verb}-{qualifier?}-{noun}-to-{destination?}
 | `light` | A light frame (science image of a target) |
 | `master` | An integrated calibration frame (bias, dark, or flat) |
 | `header` | Metadata stored in the file |
+| `targetname` | Target name metadata (matches `NORMALIZED_HEADER_TARGETNAME`) |
+| `directory` | A filesystem directory |
 
 ### Qualifiers
 
@@ -66,6 +69,8 @@ ap-{verb}-{qualifier?}-{noun}-to-{destination?}
 | `ap-move-master-to-library` | verb-noun-to-dest | Move masters → library |
 | `ap-copy-master-to-blink` | verb-noun-to-dest | Copy matching masters from library → blink |
 | `ap-move-light-to-data` | verb-noun-to-dest | Move accepted lights from blink → data |
+| `ap-discover-targetname` | verb-noun | Assign target name to lights by RA/DEC |
+| `ap-empty-directory` | verb-noun | Delete directory contents and prune empty subdirectories |
 | `ap-common` | — | Shared utilities (exception to pattern) |
 
 ## Guidelines
