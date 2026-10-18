@@ -21,6 +21,7 @@ ap-base/
 ├── ap-copy-master-to-blink/     # Master calibration frame distribution
 ├── ap-cull-light/               # Light frame selection/culling
 ├── ap-create-master/            # Master calibration frame creation
+├── ap-discover-targetname/      # Target name assignment by RA/DEC
 ├── ap-empty-directory/          # Directory cleanup utility
 ├── ap-move-light-to-data/       # Light frame data migration
 ├── ap-move-master-to-library/   # Calibration frame organization
