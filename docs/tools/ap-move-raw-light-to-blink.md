@@ -30,6 +30,7 @@ python -m ap_move_raw_light_to_blink <source_dir> <dest_dir> [options]
 | `--blink-dir DIR` | Stage directory name (default: "10_Blink") |
 | `--accept-dir DIR` | Accept subdirectory name (default: "accept") |
 | `--no-accept` | Do not create accept subdirectories |
+| `--unknown-target [NAME]` | Target name for LIGHT files with no target (default: fail; flag alone: "UNKNOWN") |
 
 ## Output Structure
 
