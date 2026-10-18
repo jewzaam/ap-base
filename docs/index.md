@@ -52,6 +52,7 @@ flowchart TB
 | Tool | Purpose |
 |------|---------|
 | [ap-common](tools/ap-common.md) | Shared utilities for data handling |
+| [ap-discover-targetname](tools/ap-discover-targetname.md) | Assign target names by nearest RA/DEC |
 | [ap-move-raw-light-to-blink](tools/ap-move-raw-light-to-blink.md) | Organize light frames by metadata |
 | [ap-cull-light](tools/ap-cull-light.md) | Quality control filtering |
 | [ap-empty-directory](tools/ap-empty-directory.md) | Directory cleanup utility |
@@ -68,6 +69,7 @@ flowchart TB
 All tools can be installed from git:
 
 ```bash
+python -m pip install git+https://github.com/jewzaam/ap-discover-targetname.git
 python -m pip install git+https://github.com/jewzaam/ap-move-raw-light-to-blink.git
 python -m pip install git+https://github.com/jewzaam/ap-cull-light.git
 python -m pip install git+https://github.com/jewzaam/ap-empty-directory.git
